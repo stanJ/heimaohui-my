@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>版本配置</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!-- bootstrap 3.0.2 -->
+        <link href="../css/bootstrap-3.2.0/css/bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="../css/bootstrap-box.css" rel="stylesheet" type="text/css" />
+        <link href="../css/bootstrap-page.css" rel="stylesheet" type="text/css" />
+        <link href="../css/myStyle.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="../js/resizableColumns/jquery.resizableColumns.css">
+        <link href="../js/validator/jquery.validator.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="../js/resizableColumns/jquery.resizableColumns.js"></script>
+        <script type="text/javascript" src="../js/jsviews.js"></script>
+        <script type="text/javascript" src="../js/base.js"></script>
+        <script type="text/javascript" src="../js/loadTmpl.js"></script>
+        <script type="text/javascript" src="../js/tableGrid/jquery.tableGrid.js"></script>
+        <script	type="text/javascript" src="../js/validator/jquery.validator.js"></script>
+		<script type="text/javascript" src="../js/validator/local/zh_CN.js"></script>
+        <script type="text/javascript">  
+        $.views.converters("isSelected",function(first,last){
+        	if(first==null) return "";
+			return first.parentId==last? "selected=selected":"";
+		});
+        	//从后台取数据，并加载模板
+	        function displayContent(){
+	        	var pageType = $("#pageType").val();
+				var url="../admin/appVersion";
+				$.ajax({
+					url:url,
+					dataType:'json',
+					data:{
+						pageType:pageType
+					},
+					success:function(data){
+						var tableData=data.page.content;
+		            	var tblContentHtml = $("#tableContentTmple").render(tableData);
+		            	$("#mycontent").html(tblContentHtml);
+					}
+				});
+	        }
+			$(function(){
+				
+				$("#example2").resizableColumns({});	//列拖动
+				//行高亮,选中
+				$("#example2").tableGrid({
+					checkAllId:"_selectAll",	//全选框的ID属性
+					singleCheckboxClass:"ckSelect",
+					selectRowClass:"warning",
+					paging:"displayPage",
+					pageAjax:function(){
+						displayContent();
+					}
+				});
+				//点击新增按钮
+				$("#addSome").click(function(){
+					$("#editForm")[0].reset();
+		 			$('#myModalLabel').html('新增');
+		 			$('#appVersionId').val('');
+		 			$('#appVersionName').val('');
+		 			$('#downloadUrl').val('');
+					$('#myModalDlg').modal('show');
+				});
+				//点击修改按钮
+				$("#updateSome").click(function(){
+					var updateArray=new Array();
+					$(".ckSelect").each(function(){
+                    	var check=$(this).is(':checked');
+                    	if(check){
+							var _id =$(this).attr("ckId");
+							updateArray.push(_id);
+                        }
+                    });
+					if(updateArray.length==0){
+						alert("请选择要编辑的项");
+						return;
+					}
+					if(updateArray.length>1){
+						alert("每次只能编辑一项");
+						return;
+					}
+					$('#myModalLabel').html('编辑');
+					$("#editForm")[0].reset();
+					$.ajax({
+						url : '../admin/appVersion/'+updateArray[0],
+						type : 'get',
+						dataType : 'json',
+						success : function(data) {
+							if (data.code == 0) {
+								appVersion = data.object;
+								$('#appVersionId').val(appVersion.id);
+								$('#appVersionName').val(appVersion.name);
+								$('#osType').val(appVersion.osType);
+								$('#downloadUrl').val(appVersion.downloadUrl);
+								$('#myModalDlg').modal('show');
+							}
+						}
+					});
+				});
+				//点击查询按钮
+				/* $("#search").click(function(){
+					displayContent();
+				}); */
+				//点击删除按钮
+				$("#delSome").click(function(){
+					var delStr="";
+					var delArray=new Array();
+					$(".ckSelect").each(function(){
+                    	var check=$(this).is(':checked');
+                    	if(check){
+							var _id =$(this).attr("ckId");
+							delStr+=parseInt(_id)+",";
+							delArray.push(_id);
+                        }
+                    });
+                    if(delStr.length==0){
+						alert("请选择要删除的项");
+						return
+                    }
+        			if (confirm("你确定要删除选中项吗？")) {
+        				 
+        				var url ="../admin/appVersion/" + delArray[0];
+        				$.ajax({
+        					url : url,
+        					type : 'DELETE',
+        					dataType : 'json',
+        					success : function(data) {
+        						if (data.code == 0) {
+        							displayContent();
+        						} else {
+        							alert(data.message);
+        						}
+        					}
+        				});
+        			}
+				});
+				$("#editForm").validator({
+					valid:function(form){
+ 
+						var appVersionId = $("#appVersionId").val();
+						var appVersionName =  $("#appVersionName").val();
+						var downloadUrl =  $("#downloadUrl").val();
+						var osType =  $("#osType").val();
+			 			var appVersion;
+						var url="../admin/appVersion";
+						var ajaxType="";
+						if(typeof(appVersionId)=="undefined" || appVersionId==null || appVersionId==0){
+							//新增
+							appVersion={"osType":osType,"name":appVersionName,"downloadUrl":downloadUrl};
+							ajaxType="POST";
+						}else{
+							//修改
+							ajaxType="PUT";
+							appVersion={"id":appVersionId,"osType":osType,"name":appVersionName,"downloadUrl":downloadUrl};
+						}
+						$.ajax({
+							url:url,
+							type:ajaxType,
+							datType:'json',
+							contentType: "application/json",
+							data:JSON.stringify(appVersion),
+							success:function(data){
+								if(data.code==0){
+									displayContent();
+									$('#myModalDlg').modal('hide');
+								}
+							}
+						});
+					}
+				}).on("click","#saveOrupdate",function(e){
+					$(e.delegateTarget).trigger("validate");
+				});
+			});
+			
+        </script>
+    </head>
+    <body>
+      <section>
+          <div>
+              <div class="col-xs-12">
+                  <div class="box">
+                      <div class="box-header">
+                      <br>
+                          <input type="button" value="新增" id="addSome" class="btn btn-success">
+                          <input type="button" value="删除" id="delSome" class="btn btn-danger">
+                          <input type="button" value="修改" id="updateSome" class="btn btn-info">
+                      </div>
+                      <div class="box-body table-responsive">
+                          <table id="example2" class="table table-bordered table-hover">
+                              <thead>
+                                  <tr>
+                                      <th><input type="checkbox" id="_selectAll" /></th>
+                                      <th id='1'>类型</th>
+                                      <th id='2'>名称</th>
+                                      <th id='3'>下载地址</th>
+                                  </tr>
+                              </thead>
+                              <!-- 表格内容 start -->
+                              <tbody id="mycontent"></tbody>
+                              <!-- 表格内容 end -->
+                          <div class="row" id="displayPage"></div>
+                          </table>
+                          <!-- 分页标签 start -->
+                          <div class="row" id="displayPage"></div>
+                          <!-- 分页标签 end -->
+                          <script id="tableContentTmple" type="text/x-jsrender">
+								<tr><td><input id="ck_{{:id}}" ckId="{{:id}}" class="ckSelect" type="checkbox" /></td><td>{{:osType}}</td><td>{{:name}}</td><td>{{:downloadUrl}}</td></tr>
+						  </script>
+                  </div>
+              </div>
+          </div>
+      </section>
+      	<!-- 新增对话框  start -->
+	<form id="editForm" class="form-horizontal" role="form">
+	<div class="modal fade" id="myModalDlg" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">新增</h4>
+				</div>
+				<div class="modal-body">
+					
+						<input type="hidden" id="appVersionId" value=""/>
+						<div class="form-group form-group-sm">
+							<label class="col-sm-2 control-label" for="osType">类型</label>
+							<div class="col-sm-8">
+								<select id="osType" class="form-control" data-rule="类型:required">
+									<option value="Android">Android</option>
+									<option value="iPhone">iPhone</option>
+									<option value="iPad">iPad</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label class="col-sm-2 control-label" for="appVersonName">名称</label>
+							<div class="col-sm-8">
+								<input class="form-control input-sm" type="text" id="appVersionName" placeholder="名称" data-rule="名称:required">
+							</div>
+						</div>
+						<div class="form-group form-group-sm">
+							<label class="col-sm-2 control-label" for="downloadUrl">下载地址</label>
+							<div class="col-sm-8">
+								<input class="form-control input-sm" type="text" id="downloadUrl" placeholder="下载地址" data-rule="下载地址:required">
+							</div>
+						</div>
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" id="saveOrupdate" class="btn btn-primary">
+						确定</button>
+				</div>
+			</div>
+			</form>
+			<!-- 新增对话框  end -->
+    </body>
+</html>

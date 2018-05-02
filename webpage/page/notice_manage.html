@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>公告管理</title>
+	</head>
+	<body>
+		<script src="../js/lib/seajs/sea.js" type="text/javascript" charset="utf-8" id="seajsnode"></script>
+		<div id="content-wrapper">
+			<div class="bszk-breadcrumb-wrapper">
+				<i class="bszk-icon-home"></i>
+				<ul class="sui-breadcrumb">
+				  <li><a href="#" data-href="index">首页</a></li>
+				  <li class="active">公告管理</li>
+				</ul>
+			</div>
+			<div class="bszk-title">公告管理</div>
+			<div class="sui-form form-horizontal">
+				<div class="bszk-block clearfix">
+					<div class="bszk-title-sm">公司简介</div>
+					<div class="normal-wrapper">
+					<div class="bszk-btn-group">
+						<button class="sui-btn btn-danger btn-sm" id="btn_remove1">删除</button>
+					</div>
+					<ul class="query-group clearfix form-intro ">
+						<li>
+							<label class="control-label v-top">
+							  上传附件
+							</label>
+							<div class="controls">
+								<input type="text" class="input-large previewfile1" readonly name="fileName"/>
+								<input type="hidden" name="filePath" class="filepath1"/>
+								<div class="file_wrapper">
+									<button class="sui-btn btn-file">选择文件</button>
+									<input type="file" class="input-file" data-previewfile="previewfile1" data-filepath="filepath1" id="upload-file1">
+								</div>
+							</div>
+						</li>
+					</ul>
+					</div>
+					<div id="table1" class="table-wrapper"></div>
+					<div class="bszk-title-sm">公告栏</div>
+					<form class="form-announce normal-wrapper">
+					<div class="bszk-btn-group">
+						<button class="sui-btn btn-primary btn-sm mr_btn" id="btn_add2" type="submit">添加</button>
+						<button class="sui-btn btn-danger btn-sm" id="btn_remove2" type="button">删除</button>
+					</div>
+					<ul class="query-group clearfix align-left ">
+						<li>
+							<div class="controls">
+								<input type="text" class="input-medium" name="ayear">
+							</div>
+							<label class="control-label">
+							  年已成交
+							</label>
+						</li>
+						<li>
+							<div class="controls">
+								<input type="text" class="input-medium" name="yearOrders">
+							</div>
+							<label class="control-label">
+							  单
+							</label>
+						</li>
+					</ul>
+					<ul class="query-group clearfix align-left">
+						<li>
+							<div class="controls">
+								<input type="text" class="input-medium" name="byear">
+							</div>
+							<label class="control-label">
+							  年
+							</label>
+						</li>
+						<li>
+							<div class="controls">
+								<input type="text" class="input-medium" name="bmonth">
+							</div>
+							<label class="control-label">
+							  月已成交
+							</label>
+						</li>
+						<li>						
+							<div class="controls">
+								<input type="text" class="input-medium" name="monthOrders">
+							</div>
+							<label class="control-label">
+							  单
+							</label>
+						</li>
+					</ul>
+					</form>
+					<div id="table2" class="table-wrapper"></div>
+					<div class="bszk-title-sm">最新消息</div>
+					<form class="form-news normal-wrapper">
+					<div class="bszk-btn-group">
+						<button class="sui-btn btn-primary btn-sm mr_btn" id="btn_add3" type="submit">添加</button>
+						<button class="sui-btn btn-danger btn-sm" id="btn_remove3" type="button">删除</button>
+					</div>
+					<ul class="query-group clearfix ">
+						<li>
+							<label class="control-label">
+							  添加消息
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium input-xxlarge" name="content" maxlength="30">
+							</div>					
+						</li>
+					</ul>
+					</form>
+					<div id="table3" class="table-wrapper"></div>
+					
+				</div>
+			</div>
+			
+		</div>
+	</body>
+</html>

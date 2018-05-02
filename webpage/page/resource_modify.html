@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>资源添加修改</title>
+	</head>
+	<body>
+		<script src="../js/lib/seajs/sea.js" type="text/javascript" charset="utf-8" id="seajsnode"></script>
+		<div id="content-wrapper">
+			<div class="bszk-breadcrumb-wrapper">
+				<i class="bszk-icon-home"></i>
+				<ul class="sui-breadcrumb">
+				  <li><a href="#" data-href="index">首页</a></li>
+				  <li><a href="#" data-href="resource_manage">资源管理</a></li>
+				  <li class="active"></li>
+				</ul>
+			</div>
+			<div class="bszk-title"></div>
+			<div class="sui-form form-horizontal">
+				<div class="bszk-block clearfix">
+					<div class="bszk-title-sm">基本信息</div>
+					<form class="form-expert-info">
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label">
+							  专家名称
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="name" maxlength="20">
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  出生日期
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium input-date" data-toggle="datepicker" name="birth">
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  联系方式
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="contact">
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  居住地
+							</label>
+							<div class="controls">
+								<span class="sui-dropdown dropdown-bordered select">
+										<span class="dropdown-inner">
+											<a id="drop4" role="button" data-toggle="dropdown" href="#" class="dropdown-toggle">
+												<input value="" name="province" type="hidden" class="">
+												<i class="caret"></i><span>请选择</span>
+											</a>
+											<ul id="menu4" role="menu" aria-labelledby="drop4" class="sui-dropdown-menu">
+												<li role="presentation" class="">
+													<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="">请选择</a>
+												</li>
+											</ul>
+										</span>
+								</span>
+								<span class="sui-dropdown dropdown-bordered select">
+										<span class="dropdown-inner">
+											<a id="drop4" role="button" data-toggle="dropdown" href="#" class="dropdown-toggle">
+												<input value="" name="city" type="hidden" class="">
+												<i class="caret"></i><span>请选择</span>
+											</a>
+											<ul id="menu4" role="menu" aria-labelledby="drop4" class="sui-dropdown-menu">
+												<li role="presentation" class="">
+													<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="">请选择</a>
+												</li>
+											</ul>
+										</span>
+								</span>
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  性别
+							</label>
+							<div class="controls">
+								<span class="sui-dropdown dropdown-bordered select">
+										<span class="dropdown-inner">
+											<a id="drop4" role="button" data-toggle="dropdown" href="#" class="dropdown-toggle">
+												<input value="" name="gender" type="hidden" class="">
+												<i class="caret"></i><span>请选择</span>
+											</a>
+											<ul id="menu4" role="menu" aria-labelledby="drop4" class="sui-dropdown-menu">
+												<li role="presentation" class="">
+													<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="">请选择</a>
+												</li>
+												<li role="presentation" class="">
+													<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="0">男</a>
+												</li>
+												<li role="presentation" class="">
+													<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="1">女</a>
+												</li>
+											</ul>
+										</span>
+								</span>
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  证件号
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="certificate">
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  邮箱
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="email" maxlength="40">
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  微信
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="wechat">
+							</div>
+						</li>
+				  </ul>
+					<ul class="query-group clearfix">
+						<li class="sm-round-wrapper">
+							<label class="control-label">
+							  专家类别
+							</label>
+							<div class="controls category-btns">
+								<!--<button class="sui-btn btn-bordered btn-sm-round bszk-btn-selected">政府官员</button>
+								<button class="sui-btn btn-bordered btn-sm-round">政府官员</button>
+								<button class="sui-btn btn-bordered btn-sm-round">政府官员</button>
+								<button class="sui-btn btn-bordered btn-sm-round">政府官员</button>
+								<button class="sui-btn btn-bordered btn-sm-round">政府官员</button>
+								<button class="sui-btn btn-bordered btn-sm-round">政府官员</button>
+								<button class="sui-btn btn-bordered btn-sm-round">政府官员</button>
+								<button class="sui-btn btn-bordered btn-sm-round">政府官员</button>
+								<button class="sui-btn btn-bordered btn-sm-round">政府官员</button>
+								<button class="sui-btn btn-bordered btn-sm-round">政府官员</button>
+								<button class="sui-btn btn-bordered btn-sm-round">政府官员</button>
+								<button class="sui-btn btn-bordered btn-sm-round">政府官员</button>
+								<button class="sui-btn btn-bordered btn-sm-round">政府官员</button>-->
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  其他
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="otherCategory">
+							</div>
+						</li>
+					</ul>
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label v-top">
+							  社会职务
+							</label>
+							<div class="controls sf-controls">
+								<div class="control">
+									<span>1</span><input type="text" class="input-medium multi-input" name="socialFunction" maxlength="50">
+								</div>
+								<div class="control">
+									<span>2</span><input type="text" class="input-medium multi-input" name="socialFunction" maxlength="50">
+								</div>
+								<div class="control">
+									<span>3</span><input type="text" class="input-medium multi-input" name="socialFunction" maxlength="50">
+								</div>
+								<div class="control">
+									<span>4</span><input type="text" class="input-medium multi-input" name="socialFunction" maxlength="50">
+								</div>
+								<div class="control">
+									<span>5</span><input type="text" class="input-medium multi-input" name="socialFunction" maxlength="50">
+								</div>
+							</div>
+						</li>
+					</ul>
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label v-top">
+							  专家备注
+							</label>
+							<div class="controls">
+								<textarea class="input-xxlarge" name="comment" maxlength="200"></textarea>
+							</div>
+						</li>
+					</ul>
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label v-top">
+							  上传附件
+							</label>
+							<div class="controls">
+								<input type="text" name="fileName" class="input-large previewfile1" readonly/>
+								<input type="hidden" name="filePath" class="filepath1"/>
+								<div class="file_wrapper">
+									<button class="sui-btn btn-file">选择文件</button>
+									<input type="file" class="input-file" data-previewfile="previewfile1" data-filepath="filepath1" id="upload-file1">
+								</div>
+								<button class="sui-btn btn-danger btn-remove" type="button">删除</button>
+							</div>
+						</li>
+					</ul>
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label">
+							</label>
+							<div class="controls">
+								<button class="sui-btn btn-primary" type="submit">保存</button>
+							</div>
+						</li>
+						
+					</ul>
+					</form>
+					
+					<div class="bszk-title-sm">助手信息</div>
+					<div class="bszk-btn-group">
+						<button class="sui-btn btn-primary btn-sm mr_btn" id="btn_add1">添加</button>
+						<button class="sui-btn btn-danger btn-sm" id="btn_remove1">删除</button>
+					</div>
+					
+					<div id="table1" class="table-wrapper"></div>
+					<div class="bszk-title-sm">演讲内容</div>
+					<form class="form-lectureContent normal-wrapper">
+					<div class="bszk-btn-group">
+						<button class="sui-btn btn-primary btn-sm mr_btn" id="btn_add2" type="submit">添加</button>
+						<button class="sui-btn btn-danger btn-sm" id="btn_remove2" type="button">删除</button>
+					</div>
+					<ul class="query-group clearfix bszk-form-group">
+						<li>
+							<label class="control-label">
+							  添加消息
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium input-xxlarge" name="content">
+							</div>					
+						</li>
+					</ul>
+					</form>
+					<div id="table2" class="table-wrapper"></div>
+					<div>
+					<div class="bszk-title-sm">宣传照片</div>
+					<div class="bszk-btn-group">
+						<button class="sui-btn btn-primary btn-sm mr_btn" id="btn_add_pics">添加</button>
+						<button class="sui-btn btn-danger btn-sm" id="btn_remove_pics">删除</button>
+					</div>
+					<ul class="upload-img-ul ul-modal-pics">
+						<li class="upload-img-li">
+							<label class="checkbox-pretty inline"><input type="checkbox"><span></span></label>
+							<span class="serial-number">1</span>
+							<div class="preview-img"></div>
+							<input type="text" class="input-large file-name" readonly/>
+							<input type="hidden" name="pics" class="file-path"/>
+							<div class="file_wrapper">
+								<button class="sui-btn btn-file" type="button">选择文件</button>
+								<input type="file" class="input-file" accept="image/bmp,image/jpg,image/jpeg,image/tiff,">
+							</div>
+							<button class="sui-btn btn-success" type="button">下载原图</button>
+						</li>
+					</ul>
+					</div>
+					<div class="bszk-title-sm">合作价格对比图</div>
+					<div class="chart_wrapper">
+						<div style="padding: 0 20px;margin-bottom: 20px;">
+							<span class="chart_title">合作价格对比图</span>
+							<div class="bszk-control-group">
+								<label class="control-label">
+								  活动时间
+								</label>
+								<div class="controls">
+									<input type="text" class="input-medium input-date cooperate-actiondate" data-toggle="datepicker" data-date-min-view-mode="2">
+								</div>
+							</div>
+						</div>
+						<div class="bszk-chart"></div>
+					</div>
+					<div class="bszk-title-sm">配合度评价</div>
+					<div class="bszk-btn-group">
+						<button class="sui-btn btn-primary btn-sm mr_btn" id="btn_add3">添加</button>
+						<!--<button class="sui-btn btn-danger btn-sm" id="btn_remove3">删除</button>-->
+					</div>
+					<div id="table3" class="table-wrapper"></div>
+				</div>
+			</div>
+			
+		</div>
+		<script id="template1" type="text/html">
+			<div id="myModal1" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">	
+			  <div class="modal-dialog">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h4 id="myModalLabel" class="modal-title">Modal title111</h4>
+				  </div>
+				  <form class="sui-form scrollwidthpop form-assistant">
+				  <div class="modal-body">
+					
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								助手姓名
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="name">
+							</div>
+							<label class="control-label"> 
+								出生日期
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium input-date" data-toggle="datepicker" name="birth">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								联系方式
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="contact">
+							</div>
+							<label class="control-label"> 
+								微信
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="wechat">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								性别
+							</label>
+							<div class="controls">
+								<span class="sui-dropdown dropdown-bordered select">
+									<span class="dropdown-inner">
+										<a id="drop9" role="button" data-toggle="dropdown" href="#" class="dropdown-toggle">
+											<input value="" name="gender" type="hidden" class="">
+											<i class="caret"></i><span>请选择</span>
+										</a>
+										<ul id="menu4" role="menu" aria-labelledby="drop4" class="sui-dropdown-menu">
+											<li role="presentation" class="">
+												<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="">请选择</a>
+											</li>
+											<li role="presentation" class="">
+												<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="0">男</a>
+											</li>
+											<li role="presentation" class="">
+												<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="1">女</a>
+											</li>
+										</ul>
+									</span>
+								</span>
+							</div>
+							<label class="control-label"> 
+								证件号
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="certificate">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								邮箱
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="email" maxlength="40"	>
+							</div>
+						</div>
+				  	
+				  </div>
+				  <div class="modal-footer">
+					<button type="submit"  class="sui-btn btn-primary btn-large">确认</button>
+					<button type="button" data-dismiss="modal" class="sui-btn btn-large">取消</button>
+				  </div>
+				  </form>
+				</div>
+			  </div>
+			</div>
+		</script>
+		<script id="template2" type="text/html">
+			<div id="myModal2" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">	
+			  <div class="modal-dialog">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h4 id="myModalLabel" class="modal-title">Modal title111</h4>
+				  </div>
+				  <form class="sui-form scrollwidthpop form-cooperate">
+				  <div class="modal-body">
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								客户名称
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="customerName">
+							</div>
+							<label class="control-label"> 
+								合同价
+							</label>
+							<div class="controls wan-suffix">
+								<input type="text" class="input-medium" name="contractPrice" maxlength="10">
+							</div>
+							<label class="control-label"> 
+								成本价
+							</label>
+							<div class="controls wan-suffix">
+								<input type="text" class="input-medium" name="costPrice" maxlength="10">
+							</div>
+							<label class="control-label"> 
+								活动时间
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium input-date" data-toggle="datepicker" name="actionDate">
+							</div>
+							
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								活动地址
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="actionAddress">
+							</div>
+							<label class="control-label"> 
+								专家联系人
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="expertContactor">
+							</div>
+							<label class="control-label"> 
+								评价
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="comment" >
+							</div>
+						</div>
+						<div class="bszk-onerow clearfix">
+							<div class="bszk-title-sm">现场照片</div>
+							<div class="bszk-btn-group">
+								<button class="sui-btn btn-primary btn-sm mr_btn" id="btn_add_tp2_1" type="button">添加</button>
+								<button class="sui-btn btn-danger btn-sm" id="btn_remove_tp2_1" type="button">删除</button>
+							</div>
+						</div>
+						
+						<ul class="upload-img-ul ul-modal-cooperate">
+							<li class="upload-img-li">
+								<label class="checkbox-pretty inline"><input type="checkbox"><span></span></label>
+								<span class="serial-number">1</span>
+								<div class="preview-img"></div>
+								<input type="text" class="input-large file-name" readonly/>
+								<input type="hidden" name="pics" class="file-path"/>
+								<div class="file_wrapper">
+									<button class="sui-btn btn-file" type="button">选择文件</button>
+									<input type="file" class="input-file" accept="image/bmp,image/jpg,image/jpeg,image/tiff,">
+								</div>
+								<button class="sui-btn btn-success" type="button">下载原图</button>
+							</li>
+						</ul>
+				  	
+				  </div>
+				  <div class="modal-footer">
+					<button type="submit"  class="sui-btn btn-primary btn-large">确认</button>
+					<button type="button" data-dismiss="modal" class="sui-btn btn-large">取消</button>
+				  </div>
+				  </form>
+				</div>
+			  </div>
+			</div>
+		</script>
+		<script id="template3" type="text/html">
+			<div id="myModal3" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">	
+			  <div class="modal-dialog">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h4 id="myModalLabel" class="modal-title">Modal title111</h4>
+				  </div>
+				  <div class="modal-body">
+					<div class="sui-form scrollwidthpop show-modal-cooperate">
+						<!--<div class="roleAddcontent">
+							<label class="control-label"> 
+								客户名称
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium bszk-data" readonly data-name="customerName">
+							</div>
+						</div>-->
+						<ul class="bszk-data-ul">
+							<li class="bszk-data-li">
+								<div class="bszk-data-group"><span class="bszk-data-title">客户名称:</span><span class="bszk-data" data-name="customerName"></span></div>
+								<div class="bszk-data-group"><span class="bszk-data-title">合同价:</span><span class="bszk-data" data-name="contractPrice"></span><span>万</span></div>
+								<div class="bszk-data-group"><span class="bszk-data-title">成本价:</span><span class="bszk-data" data-name="costPrice"></span><span>万</span></div>
+								<div class="bszk-data-group"><span class="bszk-data-title">活动时间:</span><span class="bszk-data" data-name="actionDate"></span></div>
+								
+							</li>
+							<li class="bszk-data-li">
+								<div class="bszk-data-group"><span class="bszk-data-title">活动地址:</span><span class="bszk-data" data-name="actionAddress"></span></div>
+								<div class="bszk-data-group"><span class="bszk-data-title">专家联系人:</span><span class="bszk-data" data-name="expertContactor"></span></div>
+							</li>
+							<li class="bszk-data-li">
+								<div class="bszk-data-group"><span class="bszk-data-title">评价:</span><span class="bszk-data" data-name="comment"></span></div>
+							</li>
+						</ul>
+						<div class="bszk-title-sm">现场照片</div>
+						<div class="photo-wrapper clearfix">
+							<!--<div class="photo-group">
+								<div class="photo-show"></div>
+								<button class="sui-btn btn-success">下载原图</button>
+							</div>
+							<div class="photo-group">
+								<div class="photo-show"></div>
+								<button class="sui-btn btn-success">下载原图</button>
+							</div>
+							<div class="photo-group">
+								<div class="photo-show"></div>
+								<button class="sui-btn btn-success">下载原图</button>
+							</div>
+							<div class="photo-group last-mr">
+								<div class="photo-show"></div>
+								<button class="sui-btn btn-success">下载原图</button>
+							</div>-->
+						</div>
+				  	</div>
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" data-ok="modal"  class="sui-btn btn-primary btn-large">确认</button>
+					<button type="button" data-dismiss="modal" class="sui-btn btn-large">取消</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+		</script>
+
+	</body>
+</html>

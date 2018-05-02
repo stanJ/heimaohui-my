@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>账号管理</title>
+	</head>
+	<body>
+		<script src="../js/lib/seajs/sea.js" type="text/javascript" charset="utf-8" id="seajsnode"></script>
+		<div id="content-wrapper">
+			<div class="bszk-breadcrumb-wrapper">
+				<i class="bszk-icon-home"></i>
+				<ul class="sui-breadcrumb">
+				  <li><a href="#" data-href="index">首页</a></li>
+				  <li class="active">账号管理</li>
+				</ul>
+			</div>
+			<div class="bszk-title">查询操作</div>
+			<div class="sui-form form-horizontal">
+				<div class="bszk-block clearfix">
+					<ul class="query-group clearfix acc-ul" id="query-user">
+						<li>
+							<label class="control-label">
+							  账号
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="name">
+							</div>
+						</li>					
+						<li>
+							<label class="control-label">
+							  用户类型
+							</label>
+							<div class="controls">
+								<span class="sui-dropdown dropdown-bordered select">
+										<span class="dropdown-inner">
+											<a id="drop4" role="button" data-toggle="dropdown" href="#" class="dropdown-toggle">
+												<input value="" name="userType" type="hidden" class="">
+												<i class="caret"></i><span>请选择</span>
+											</a>
+											<ul id="menu4" role="menu" aria-labelledby="drop4" class="sui-dropdown-menu">
+												<li role="presentation" class="">
+													<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="">请选择</a>
+												</li>
+											</ul>
+										</span>
+								</span>
+							</div>
+						</li>
+						<li>
+							<button type="button" class="sui-btn btn-primary" style="margin-left:12px;" id="btn_query1">查询</button>
+						</li>
+						<li class="fr" style="margin-right:-2px;">
+							<button type="button" class="sui-btn btn-primary"  id="btn_add1">添加</button>
+						</li>
+				  </ul>
+				</div>
+				<div class="bszk-block">
+					<div id="table1" class="table-wrapper"></div>
+				</div>
+			</div>
+		</div>
+		<script id="template1" type="text/html">
+			<div id="myModal1" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">	
+			  <div class="modal-dialog">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h4 id="myModalLabel" class="modal-title">Modal title111</h4>
+				  </div>
+				  <form class="sui-form scrollwidthpop form-user">
+				  <div class="modal-body modal-noscroll">
+					
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								账号
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="userName">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								密码
+							</label>
+							<div class="controls">
+								<input type="password" class="input-medium" name="password">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								重复密码
+							</label>
+							<div class="controls">
+								<input type="password" class="input-medium" name="repeatPW">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								所属公司
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="company">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								联系电话
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="contact">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								用户类型
+							</label>
+							<div class="controls">
+								<span class="sui-dropdown dropdown-bordered select">
+										<span class="dropdown-inner">
+											<a id="drop4" role="button" data-toggle="dropdown" href="#" class="dropdown-toggle">
+												<input value="" name="userType" type="hidden" class="">
+												<i class="caret"></i><span>请选择</span>
+											</a>
+											<ul id="menu4" role="menu" aria-labelledby="drop4" class="sui-dropdown-menu">
+												<li role="presentation" class="">
+													<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="">请选择</a>
+												</li>
+											</ul>
+										</span>
+								</span>
+							</div>
+						</div>
+				  </div>
+				  <div class="modal-footer">
+					<button type="submit"  class="sui-btn btn-primary btn-large">确认</button>
+					<button type="button" data-dismiss="modal" class="sui-btn btn-large">取消</button>
+				  </div>
+				  </form>
+				</div>
+			  </div>
+			</div>
+		</script>
+		<script id="template2" type="text/html">
+			<div id="myModal2" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">	
+			  <div class="modal-dialog">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h4 id="myModalLabel" class="modal-title">Modal title111</h4>
+				  </div>
+				  <form class="sui-form scrollwidthpop form-user">
+				  <div class="modal-body modal-noscroll">
+					
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								账号
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="userName" readonly>
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								所属公司
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="company">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								联系电话
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="contact">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								用户类型
+							</label>
+							<div class="controls">
+								<span class="sui-dropdown dropdown-bordered select">
+										<span class="dropdown-inner">
+											<a id="drop4" role="button" data-toggle="dropdown" href="#" class="dropdown-toggle">
+												<input value="" name="userType" type="hidden" class="">
+												<i class="caret"></i><span>请选择</span>
+											</a>
+											<ul id="menu4" role="menu" aria-labelledby="drop4" class="sui-dropdown-menu">
+												<li role="presentation" class="">
+													<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="">请选择</a>
+												</li>
+											</ul>
+										</span>
+								</span>
+							</div>
+						</div>
+				  </div>
+				  <div class="modal-footer">
+					<button type="submit"  class="sui-btn btn-primary btn-large">确认</button>
+					<button type="button" data-dismiss="modal" class="sui-btn btn-large">取消</button>
+				  </div>
+				  </form>
+				</div>
+			  </div>
+			</div>
+		</script>
+		<script id="template3" type="text/html">
+			<div id="myModal3" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">	
+			  <div class="modal-dialog">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h4 id="myModalLabel" class="modal-title">Modal title111</h4>
+				  </div>
+				  <form class="sui-form scrollwidthpop form-user">
+				  <div class="modal-body modal-noscroll">
+					
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								账号
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="userName" readonly>
+								<input value="" name="userType" type="hidden" class="">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								密码
+							</label>
+							<div class="controls">
+								<input type="password" class="input-medium" name="newPassword">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								重复密码
+							</label>
+							<div class="controls">
+								<input type="password" class="input-medium" name="repeatPW">
+							</div>
+						</div>
+				  </div>
+				  <div class="modal-footer">
+					<button type="submit"  class="sui-btn btn-primary btn-large">确认</button>
+					<button type="button" data-dismiss="modal" class="sui-btn btn-large">取消</button>
+				  </div>
+				  </form>
+				</div>
+			  </div>
+			</div>
+		</script>
+	
+	</body>
+</html>

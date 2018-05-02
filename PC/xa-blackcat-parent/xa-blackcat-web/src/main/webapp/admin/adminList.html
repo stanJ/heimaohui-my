@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html manifest="../backstage/main.appcache">
+<head>
+<meta charset="UTF-8">
+<title>系统用户</title>
+<meta
+	content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
+	name='viewport'>
+<!-- bootstrap 3.0.2 -->
+<link href="../css/bootstrap-3.2.0/css/bootstrap.min.css" rel="stylesheet"
+	type="text/css" />
+<link href="../css/bootstrap-box.css" rel="stylesheet" type="text/css" />
+<link href="../css/bootstrap-page.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet"
+	href="../js/resizableColumns/jquery.resizableColumns.css">
+<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+<link rel="stylesheet" type="text/css" href="../css/global.css" />
+<link rel="stylesheet" type="text/css" href="../css/body.css" />
+<script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="../js/resizableColumns/jquery.resizableColumns.js"></script>
+<script type="text/javascript" src="../js/jsviews.min.js"></script>
+<script type="text/javascript" src="../js/loadTmpl.js"></script>
+<script type="text/javascript" src="../js/base.js"></script>
+<script type="text/javascript" src="../js/tableGrid/jquery.tableGrid.js"></script>
+<script type="text/javascript">
+	$.views.converters("isSelected", function(first, last) {
+		if (first == null)
+			return "";
+		return first.parentId == last ? "selected=selected" : "";
+	});
+
+	//从后台取数据，并加载模板
+	function displayContent() {
+		var userName = $("#userName").val();
+		var nextPage = $("#_click_page").val(); //不变
+		if (typeof (nextPage) == 'undefined' || nextPage == "") {
+			nextPage = 0;
+		}
+		var sortDate = "[{property:'userId',direction:'ASC'}]";
+		var jsonFilter = "{search_LIKE_userName:\"" + userName + "\"";
+		if ($("#roleId").val().length > 0) {
+			jsonFilter += ",search_EQ_roleId:\"" + $("#roleId").val() + "\"";
+		}
+		jsonFilter += "}";
+		var url = "../xaCmsUser/showCmsUser/" + nextPage + "/" + sortDate + "/"
+				+ jsonFilter;
+		$.ajax({
+			url : url,
+			dataType : 'json',
+			success : function(data) {
+				var tableData = data.content;
+				var tblContentHtml = $("#tableContentTmple").render(tableData);
+				$("#mycontent").html(tblContentHtml);
+				//加载分页器
+				loadTmpl.renderExternalTemplate("page", "#displayPage", data);
+			}
+		});
+	}
+	$(function() {
+		var nextPage = 0;
+		var sortDate = "[{property:'roleId',direction:'ASC'}]";
+		var jsonFilter = "{}";
+		var url = "../xaCmsRole/showRoles/" + nextPage + "/" + sortDate + "/"
+				+ jsonFilter;
+		$
+				.ajax({
+					url : url,
+					dataType : 'json',
+					success : function(data) {
+						var tableData = data.content;
+						var htmlStr = "<select id=\"roleId\" class=\"inp_select\"><option value=\"\">全部</option>";
+						for (var i = 0; i < tableData.length; i++) {
+							htmlStr += "<option value='"+tableData[i].roleId+"'>"
+									+ tableData[i].roleName + "</option>";
+						}
+						htmlStr += "</select>";
+						$("#roleInsertId").html(htmlStr);
+					}
+				});
+
+		document.onkeydown = function(e) {
+			var ev = document.all ? window.event : e;
+			if (ev.keyCode == 13) {
+				displayContent();
+			}
+		}
+	});
+	$(function() {
+		$("#example2").resizableColumns({}); //列拖动
+		//行高亮,选中
+		$("#example2").tableGrid({
+			checkAllId : "_selectAll", //全选框的ID属性
+			singleCheckboxClass : "ckSelect",
+			selectRowClass : "warning",
+			paging : "displayPage",
+			pageAjax : function() {
+				displayContent();
+			}
+		});
+		//点击新增按钮
+		$("#addSome").click(function() {
+			window.location.href = "userEdit.html?userId=0";
+		});
+		//点击修改按钮
+		$("#updateSome").click(function() {
+			var updateArray = new Array();
+			$(".ckSelect").each(function() {
+				var check = $(this).is(':checked');
+				if (check) {
+					var _id = $(this).attr("ckId");
+					updateArray.push(_id);
+				}
+			});
+			if (updateArray.length == 0) {
+				alert("请选择要编辑的项");
+				return;
+			}
+			if (updateArray.length > 1) {
+				alert("每次只能编辑一项");
+				return;
+			}
+			window.location.href = "userEdit.html?userId=" + updateArray[0];
+		});
+		//点击查询按钮
+		$("#search").click(function() {
+			displayContent();
+		});
+		//点击删除按钮
+		$("#delSome").click(function() {
+			var delStr = "";
+			var delArray = new Array();
+			$(".ckSelect").each(function() {
+				var check = $(this).is(':checked');
+				if (check) {
+					var _id = $(this).attr("ckId");
+					delStr += parseInt(_id) + ",";
+					delArray.push(_id);
+				}
+			});
+			if (delStr.length == 0) {
+				alert("请选择要删除的项");
+				return
+
+			}
+			if (confirm("你确定要删除选中项吗？")) {
+				var delIds = "" + delArray + "";
+				var url = "../xaCmsUser/user/" + delIds;
+				$.ajax({
+					url : url,
+					type : 'DELETE',
+					dataType : 'json',
+					success : function(data) {
+						if (data.status == 1) {
+							displayContent();
+						} else {
+							alert(data.result);
+						}
+					}
+				});
+			}
+		});
+	});
+
+	function editOne(id) {
+		window.location.href = "userEdit.html?userId=" + id;
+	}
+
+	function oprateOne(id, status) {
+		var msg = "你确定要删除选中项吗？";
+		/* if (status == 1) {
+			msg = "你确定要启用选中项吗？";
+		} */
+		if (confirm(msg)) {
+			var url = "../xaCmsUser/operateUserById";
+			$.ajax({
+				url : url,
+				type : 'post',
+				dataType : 'json',
+				data : {
+					id : id,
+					status : status
+				},
+				success : function(data) {
+					if (data.status == 1) {
+						displayContent();
+					} else {
+						alert(data.result);
+					}
+				}
+			});
+		}
+	}
+
+</script>
+</head>
+<body>
+	<section>
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-header">
+					<div class="">
+						<form action="" method="post" class="select_form" id="select_form">
+							<p class="fl">
+								<label for="">用户名：</label> <input style="width:200px" type="text" id="userName" />
+							</p>
+							<p class="fl">
+								<label for="">角色：</label> <span id="roleInsertId"> 
+								<select id="roleId" style="width:200px" class="inp_select">
+										<option value="">全部</option>
+								</select>
+								</span>
+							</p>
+							<p class="fl">
+								<input type="button" value="搜索" id="search" class="btn btn-primary"> 
+							</p>
+						</form>
+					</div>
+				</div>
+				<div class="tab_box">
+					<p class="mt20">
+						<input type="button" value="创建用户" id="addSome" class="btn">
+					</p>
+					<div class="clearfix"></div>
+					<table class="tab1">
+						<thead>
+							<th><input type="hidden" id="_selectAll" />序号</th>
+							<th id='1'>用户名</th>
+							<th id='5'>昵称</th>
+							<th id='2'>角色</th>
+							<th id='3'>创建时间</th>
+							<th id='6'>最后登录时间</th>
+							<th id='7'>状态</th>
+							<th id='4'>操作</th>
+						</thead>
+						<tbody id="mycontent"></tbody>
+					</table>
+					<div class="row" id="displayPage"></div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<script id="tableContentTmple" type="text/x-jsrender">
+								<tr><td><input id="ck_{{:userId}}" ckId="{{:userId}}" class="ckSelect" type="hidden" />{{:#index+1}}</td>
+									<td>{{:userName}}</td>
+									<td>{{:nickname}}</td>
+									<td>{{:role.roleName}}</td>
+									<td>{{:registDate}}</td>
+									<td>{{:lastLoginDate}}</td>
+									<td>{{if status==1}}正常{{else status==0}}锁定{{/if}}</td>
+									<td>
+										<span title="编辑" onclick="editOne('{{:userId}}')" class="edit_td"></span>
+										{{!--<span title="删除" onclick="oprateOne('{{:userId}}','9')" class="del_td"></span>--}}
+									</td>
+								</tr>
+						  </script>
+</body>
+</html>

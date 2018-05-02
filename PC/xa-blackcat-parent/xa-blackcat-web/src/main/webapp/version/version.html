@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>版本管理</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!-- bootstrap 3.0.2 -->
+        <link href="../css/bootstrap-3.2.0/css/bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="../css/bootstrap-box.css" rel="stylesheet" type="text/css" />
+        <link href="../css/bootstrap-page.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="../js/resizableColumns/jquery.resizableColumns.css">
+        <link href="../js/validator/jquery.validator.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="../js/resizableColumns/jquery.resizableColumns.js"></script>
+        <script type="text/javascript" src="../js/jsviews.js"></script>
+        <script type="text/javascript" src="../js/loadTmpl.js"></script>
+        <script type="text/javascript" src="../js/base.js"></script>
+        <script type="text/javascript" src="../js/tableGrid/jquery.tableGrid.js"></script>
+        <script	type="text/javascript" src="../js/validator/jquery.validator.js"></script>
+		<script type="text/javascript" src="../js/validator/local/zh_CN.js"></script>
+        <script type="text/javascript">  
+        $.views.converters({
+        	"isSelected":function(first,last){
+            	if(first==null) return "";
+    			return first.parentId==last? "selected=selected":"";
+    		},
+    		"showTypeSelected":function(first,last){
+            	if(first==null) return "";
+    			return first.showType==last? "selected=selected":"";
+    		}
+        });
+        	//从后台取数据，并加载模板
+	        function displayContent(){
+				var nextPage=$("#_click_page").val();			//不变
+				if(typeof(nextPage) == 'undefined' || nextPage==""){
+					nextPage=0;
+				}
+				var url="../admin/version/getVersionList";
+				$.ajax({
+					url:url,
+					dataType:'json',
+					data:{
+						pageNum:nextPage,
+						pageSize:10
+					},
+					success:function(data){
+						var tableData=data.object.content;
+		            	var tblContentHtml = $("#tableContentTmple").render(tableData);
+		            	$("#mycontent").html(tblContentHtml);
+		            	//加载分页器
+		            	loadTmpl.renderExternalTemplate("page", "#displayPage", data.object);
+					}
+				});
+	        }
+			$(function(){
+				$("#example2").resizableColumns({});	//列拖动
+				//行高亮,选中
+				$("#example2").tableGrid({
+					checkAllId:"_selectAll",	//全选框的ID属性
+					singleCheckboxClass:"ckSelect",
+					selectRowClass:"warning",
+					paging:"displayPage",
+					pageAjax:function(){
+						displayContent();
+					}
+				});
+				
+				//新增或修改
+				$(document).on('click',"#saveOrupdate",function(){
+					$("#validateForm").isValid(function(result){
+					    if(!result){
+							alert("还有不符合填写规定的字段，请检查！");
+							return;
+					    }
+						var versionCode=$("#versionCode").val();
+						var updateUrl=$("#updateUrl").val();
+						var versionType=$("#versionType").val();
+						var forced=$("#forced").val();
+						var isforce = false;
+						if(forced == 1){
+							isforce = true;
+						}
+						var version={"versionCode":versionCode,
+							"updateUrl":updateUrl,
+							"versionType":versionType,
+							"forced":isforce
+						};
+						url="../admin/version/saveVersion";	
+						$.ajax({
+							url:url,
+							type:"post",
+							dataType: "json",
+			                contentType: "application/json",
+							data:JSON.stringify(version),
+							success:function(data){
+								if(data.code==1){
+									$('#myModal').modal('hide');
+									displayContent();
+								}
+								else{
+									alert(data.message);
+								}
+							}
+						});
+					});
+				});
+				//点击查询按钮
+				$("#addSome").click(function(){
+					var selectContentHtml = $("#newOrupdateTmpl").render('');
+					$("#myModal").html(selectContentHtml);
+                    $("#myModal").modal();
+				});
+				//点击删除按钮
+				$("#delSome").click(function(){
+					var delStr="";
+					var delArray=new Array();
+					$(".ckSelect").each(function(){
+                    	var check=$(this).is(':checked');
+                    	if(check){
+							var _id =$(this).attr("ckId");
+							delStr+=parseInt(_id)+",";
+							delArray.push(_id);
+                        }
+                    });
+                    if(delStr.length==0){
+						alert("请选择要删除的项");
+						return
+                    }
+                    if(confirm("你确定要删除选中项吗？")){
+                    	var delIds=""+delArray+"";
+                    	var url="../admin/version/deleteVersion";
+                    	$.ajax({
+							url:url,
+							type:'GET',
+							dataType:'json',
+							data:{
+								ids:delIds
+							},
+							success:function(data){
+								if(data.code==1){
+									displayContent();
+								}else{
+									alert(data.message);
+								}
+							}
+                        });
+                    }
+				});
+			});
+			
+        </script>
+    </head>
+    <body>
+      <section>
+          <div>
+              <div class="col-xs-12">
+                  <div class="box">
+                      <div class="box-header">
+                      <br>
+                          <input type="button" value="新增" id="addSome" class="btn btn-success">
+                          <input type="button" value="删除" id="delSome" class="btn btn-danger">
+                      </div>
+                      <div class="box-body table-responsive">
+                          <table id="example2" class="table table-bordered table-hover">
+                              <thead>
+                                  <tr>
+                                      <th><input type="checkbox" id="_selectAll" /></th>
+                                      <th id='4'>版本类型</th>
+                                      <th id='1'>版本号</th>
+                                      <th id='2'>更新地址</th>
+                                      <th id='3'>是否强制更新</th>
+                                  </tr>
+                              </thead>
+                              <!-- 表格内容 start -->
+                              <tbody id="mycontent"></tbody>
+                              <!-- 表格内容 end -->
+                          </table>
+                          <!-- 分页标签 start -->
+                          <div class="row" id="displayPage"></div>
+                          <!-- 分页标签 end -->
+                          <script id="tableContentTmple" type="text/x-jsrender">
+								<tr><td><input id="ck_{{:id}}" ckId="{{:id}}" class="ckSelect" type="checkbox" /></td><td>{{if versionType==1}}iphone{{/if}}{{if versionType==2}}android{{/if}}</td><td>{{:versionCode}}</td><td>{{:updateUrl}}</td><td>{{if forced}}是{{else}}否{{/if}}</td></tr>
+						  </script>
+                  </div>
+              </div>
+          </div>
+      </section>
+<!-- 新增对话框  start -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+
+<script type="text/x-jsrender" id="newOrupdateTmpl">
+<form id="validateForm">
+	<div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel"> 新增版本信息
+            </h4>
+         </div>
+         <div class="modal-body">
+            <fieldset> 
+				<div class="control-group">
+					<label for="userPhoto2" class="control-label">版本号</label>
+					<div class="controls">
+							<input type="text" placeholder="请填写版本号" data-rule="required; length[0~10]" id="versionCode" name="versionCode" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">版本类型</label>
+					<div class="controls" id="parentResourceContainer">
+						<select id="versionType" name="versionType"  data-rule="required;">
+							<option value="1">iphone</option>
+							<option value="2">android</option>
+						</select>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">是否强制更新</label>
+					<div class="controls" id="parentResourceContainer">
+						<select id="forced" name="forced"  data-rule="required;">
+							<option value="0">否</option>
+							<option value="1">是</option>
+						</select>
+					</div>
+				</div>
+				<div class="control-group">
+					<label for="userPassword" class="control-label">更新地址</label>
+					<div class="controls">
+						<input type="text" required="required" data-rule="length[1~200]" id="updateUrl"  placeholder="请输入更新地址" name="updateUrl"/>
+					</div>
+				</div>
+			</fieldset>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" 
+               data-dismiss="modal">关闭
+            </button>
+            <button type="button" id="saveOrupdate" class="btn btn-primary">
+               确定
+            </button>
+         </div>
+      </div>
+</form>
+</script>
+
+
+<!-- 新增对话框  end -->
+    </body>
+</html>

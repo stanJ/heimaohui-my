@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html manifest="../backstage/main.appcache">
+    <head>
+        <meta charset="UTF-8">
+        <title>修改角色</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!-- bootstrap 3.0.2 -->
+        <link href="../css/bootstrap-3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="../css/bootstrap-box.css" rel="stylesheet" type="text/css" />
+        <link href="../css/bootstrap-page.css" rel="stylesheet" type="text/css" />
+        <link href="../js/jstree/themes/default/style.min.css" rel="stylesheet" type="text/css" />
+        <link href="../js/validator/jquery.validator.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/global.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/body.css"/>
+        <script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="../js/jsviews.min.js"></script>
+        <script type="text/javascript" src="../js/loadTmpl.js"></script>
+        <script type="text/javascript" src="../js/jstree/jstree.min.js"></script>
+        <script	type="text/javascript" src="../js/validator/jquery.validator.js"></script>
+		<script type="text/javascript" src="../js/validator/local/zh_CN.js"></script>
+		<script type="text/javascript" src="../js/base.js" charset="utf-8"></script>
+        <script type="text/javascript">
+        	//获取浏览器参数
+        	function getUrlParam(name){
+        		var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        		var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        		if (r!=null) return unescape(r[2]); return null; //返回参数值
+        	}
+			$(function(){
+				var roleId=getUrlParam("roleId");
+				if(roleId==""){
+					alert("roleId参数不能为空");
+					return;
+				}
+				$("#roleId").val(roleId);
+				$.ajax({
+					url:'../xaCmsRole/showRole/'+roleId,
+					type:'get',
+					dataType:'json',
+					success:function(data){
+						$("#roleName").val(data.roleName);
+						$("#roleDesc").val(data.roleDesc);
+					}
+				});
+				$("#resource").jstree({
+					"core" : {
+        			    "themes" : {
+        			      "variant" : "large"
+        			    },
+        			    'data' : {
+        		            'url' : '../xaCmsRole/showResource/'+roleId
+        		        }
+        			  },
+        			  "plugins" : [ "wholerow", "checkbox" ]
+				});
+				
+				$("#updateSome").click(function(){
+					$("#validateForm").isValid(function(result){
+					    if(!result){
+							alert("还有不符合填写规定的字段，请检查！");
+							return;
+					    }
+						var selectArray =$('#resource').jstree('get_selected');		//选中项
+						var roleName=$("#roleName").val();
+						var roleId=$("#roleId").val();
+						var roleDesc=$("#roleDesc").val();
+						if(selectArray.length==0){
+							alert("请选择角色对应的资源");
+							return;
+						}
+						var xaCmsRole={"roleId":roleId,"roleName":roleName,"roleDesc":roleDesc};
+						var resourceIds=""+selectArray+"";
+						$.ajax({
+							url:'../xaCmsRole/'+resourceIds+"/update",
+							type:'POST',
+							datType:'json',
+							contentType: "application/json",
+							data:JSON.stringify(xaCmsRole),
+							success:function(data){
+								if(data.status=1){
+									window.location.href="role.html";
+								}
+							}
+						});
+				});
+				});
+			});
+        </script>
+    </head>
+    <body>
+      <section>
+              <div class="col-xs-12">
+	        	<div class="span1">
+					<span class="badge badge-info">角色管理    &gt; 角色编辑</span>
+				</div>
+              <form id="validateForm">
+                  <div class="box">
+                      <div class="box-header">
+                      <input type="hidden" id="roleId" name="roleId" />
+                      <br>
+                          <input type="button" value="确定" id="updateSome" class="btn btn-success">
+                          <a  href="role.html" class="btn btn-info" >返回</a>
+                      </div>
+                      <div class="box-body table-responsive">
+                      	<span>角色</span><input type="text" name="roleName" data-rule="角色:required;length[2~30];remote[get:../xaCmsRole/checkRole, roleId]" id="roleName" /><br />
+                     	 <br/>
+                     	 <span>描述</span><textarea id="roleDesc" rows="3" data-rule="描述:required;length[1~200]" cols="50"></textarea><br/><br/>
+                      	<div id="resource"></div>
+                      </div>
+             	</div>
+              </form>
+          </div>
+      </section>
+    </body>
+</html>

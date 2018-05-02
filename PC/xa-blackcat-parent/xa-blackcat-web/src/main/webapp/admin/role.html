@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html manifest="../backstage/main.appcache">
+<head>
+<meta charset="UTF-8">
+<title>系统角色</title>
+<meta
+	content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
+	name='viewport'>
+<!-- bootstrap 3.0.2 -->
+<link href="../css/bootstrap-3.2.0/css/bootstrap.min.css" rel="stylesheet"
+	type="text/css" />
+<link href="../css/bootstrap-box.css" rel="stylesheet" type="text/css" />
+<link href="../css/bootstrap-page.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet"
+	href="../js/resizableColumns/jquery.resizableColumns.css">
+<link rel="stylesheet" type="text/css" href="../css/reset.css" />
+<link rel="stylesheet" type="text/css" href="../css/global.css" />
+<link rel="stylesheet" type="text/css" href="../css/body.css" />
+<script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="../js/resizableColumns/jquery.resizableColumns.js"></script>
+<script type="text/javascript" src="../js/jsviews.min.js"></script>
+<script type="text/javascript" src="../js/loadTmpl.js"></script>
+<script type="text/javascript" src="../js/base.js"></script>
+<script type="text/javascript" src="../js/tableGrid/jquery.tableGrid.js"></script>
+<script type="text/javascript">
+	$.views.converters("isSelected", function(first, last) {
+		if (first == null)
+			return "";
+		return first.parentId == last ? "selected=selected" : "";
+	});
+	//从后台取数据，并加载模板
+	function displayContent() {
+		var resourceName = $("#roleName").val();
+		var nextPage = $("#_click_page").val(); //不变
+		if (typeof (nextPage) == 'undefined' || nextPage == "") {
+			nextPage = 0;
+		}
+		var sortDate = "[{property:'roleId',direction:'ASC'}]";
+		var jsonFilter = "{search_LIKE_roleName:\"" + resourceName + "\"}";
+		var url = "../xaCmsRole/showRoles/" + nextPage + "/" + sortDate + "/"
+				+ jsonFilter;
+		$.ajax({
+			url : url,
+			dataType : 'json',
+			success : function(data) {
+				var tableData = data.content;
+				var tblContentHtml = $("#tableContentTmple").render(tableData);
+				$("#mycontent").html(tblContentHtml);
+				//加载分页器
+				loadTmpl.renderExternalTemplate("page", "#displayPage", data);
+			}
+		});
+	}
+	$(function() {
+		document.onkeydown = function(e) {
+			var ev = document.all ? window.event : e;
+			if (ev.keyCode == 13) {
+				displayContent();
+			}
+		}
+	});
+	$(function() {
+		$("#example2").resizableColumns({}); //列拖动
+		//行高亮,选中
+		$("#example2").tableGrid({
+			checkAllId : "_selectAll", //全选框的ID属性
+			singleCheckboxClass : "ckSelect",
+			selectRowClass : "warning",
+			paging : "displayPage",
+			pageAjax : function() {
+				displayContent();
+			}
+		});
+		//点击新增按钮
+		$("#addSome").click(function() {
+			window.location.href = "addRole.html";
+		});
+		//点击查询按钮
+		$("#search").click(function() {
+			displayContent();
+		});
+	});
+	function editDetail(id,roleName){
+		/* var isforbid = false;
+		if (roleName == '系统管理员') {
+			isforbid = true;
+		}
+		if (isforbid) {
+			alert("系统管理员为系统预定义的特殊角色，不可编辑、删除");
+			return;
+		} */
+		var url = "updateRole.html?roleId=" + id;
+    	window.location.href=url;
+	}
+
+	function deleteDetail(id,roleName){
+		var isforbid = false;
+		if (roleName == '系统管理员') {
+			isforbid = true;
+		}
+		if (isforbid) {
+			alert("系统管理员为系统预定义的特殊角色，不可删除");
+			return;
+		}
+        if(confirm("你确定要删除选中项吗？")){
+			var url = "../xaCmsRole/role/" + id;
+        	$.ajax({
+				url: url,
+				type : 'DELETE',
+				dataType : 'json',
+				success: function(data){
+					if (data.status == 1) {
+						displayContent();
+					} else {
+						alert(data.result);
+					}
+				}
+            });
+        }
+	}
+</script>
+</head>
+<body>
+	<section>
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-header">
+					<div class="tabSelect" style="margin:13px" id="selectHeadId">
+						<input type="text" id="roleName" placeholder="角色名称" /> 
+						<input type="button" value="搜索" id="search" class="btn btn-primary"></div>
+					<div class="box-header">
+						<input type="button" value="添加角色" id="addSome" class="btn btn-success"> 
+					</div>
+					<div class="box-body table-responsive">
+						<table id="example2" class="tab1">
+							<thead>
+								<tr>
+									<th width="30"><input type="hidden" id="_selectAll" />序号</th>
+									<th id='1'>角色</th>
+									<th id='2'>创建人</th>
+									<th id='3'>创建时间</th>
+									<th id='4'>修改时间</th>
+									<th id='6'>操作</th>
+								</tr>
+							</thead>
+							<!-- 表格内容 start -->
+							<tbody id="mycontent"></tbody>
+							<!-- 表格内容 end -->
+						</table>
+						<!-- 分页标签 start -->
+						<div class="row" id="displayPage"></div>
+						<!-- 分页标签 end -->
+						<script id="tableContentTmple" type="text/x-jsrender">
+								<tr>
+									<td><input id="ck_{{:roleId}}" ckId="{{:roleId}}" ckName="{{:roleName}}" class="ckSelect" type="hidden" />{{:#index+1}}</td>
+									<td>{{:roleName}}</td>
+									<td>{{:userName}}</td>
+									<td>{{getSubStrSplit:createTime 16}}</td>
+									<td>{{getSubStrSplit:updateTime 16}}</td>
+									<td><span onclick="editDetail('{{:roleId}}','{{:roleName}}')" class="edit_td"></span><span onclick="deleteDetail('{{:roleId}}','{{:roleName}}')" class="del_td"></span></td>
+								</tr>
+						  </script>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

@@ -1,0 +1,666 @@
+
+/** A Rule grammar for ANTLR v4 derived from ANTLR v3 Java grammar.
+ *  Uses ANTLR v4's left-recursive expression notation.
+ *  It parses ECJ, Netbeans, JDK etc...
+ *
+ *  Sam Harwell cleaned this up significantly and updated to 1.7!
+ *
+ *  You can test with
+ *
+ *  $ antlr4 Rule.g4
+ */
+grammar Rule;
+
+// starting point for parsing a java file
+compilationUnit
+    :  expression
+    ;
+
+
+// EXPRESSIONS
+expression
+    : simple_expression ( expr_op simple_expression )*
+    | primary
+    ;
+
+primary
+    :   LPAREN expression RPAREN  
+    ;
+       
+simple_expression
+   : left_element relational_op right_element | target_element between_op left_element AND right_element | target_element is_or_is_not NULL
+   ;
+
+
+
+right_element
+   : literal | literalString
+   ;
+
+left_element
+   : qualifiedName
+   ;
+
+target_element
+   : qualifiedName
+   ;
+
+
+relational_op
+   : EQ | LTH | GTH | NOT_EQ | LET | GET | LIKE
+   ;
+
+expr_op
+   : AND | XOR | OR | NOT
+   ;
+
+between_op
+   : BETWEEN
+   ;
+
+is_or_is_not
+   : IS | IS NOT
+   ;
+      
+   
+  
+
+qualifiedName
+    :   Identifier (DOT Identifier)*
+    ;
+
+literal
+    :   IntegerLiteral
+    |   FloatingPointLiteral
+    |   CharacterLiteral
+    |   StringLiteral
+    |   BooleanLiteral
+    |   NULL
+    ;
+
+literalString
+    : LPAREN literal (COMMA literal)* RPAREN  
+    ;
+
+
+// LEXER
+LPAREN      :     '('   ;     
+RPAREN      :     ')'   ;
+
+
+SELECT
+   : 'select'
+   ;
+
+
+FROM
+   : 'from'
+   ;
+
+
+WHERE
+   : 'where'
+   ;
+
+
+AND
+   : 'and' | '&&'
+   ;
+
+
+OR
+   : 'or' | '||'
+   ;
+
+
+XOR
+   : 'xor'
+   ;
+
+
+IS
+   : 'is'
+   ;
+
+
+NULL
+   : 'null'
+   ;
+
+
+LIKE
+   : 'like'
+   ;
+
+
+IN
+   : 'in'
+   ;
+
+
+EXISTS
+   : 'exists'
+   ;
+
+
+ALL
+   : 'all'
+   ;
+
+
+ANY
+   : 'any'
+   ;
+
+
+TRUE
+   : 'true'
+   ;
+
+
+FALSE
+   : 'false'
+   ;
+
+
+DIVIDE
+   : 'div' | '/'
+   ;
+
+
+MOD
+   : 'mod' | '%'
+   ;
+
+
+BETWEEN
+   : 'between'
+   ;
+
+
+REGEXP
+   : 'regexp'
+   ;
+
+
+PLUS
+   : '+'
+   ;
+
+
+MINUS
+   : '-'
+   ;
+
+
+NEGATION
+   : '~'
+   ;
+
+
+VERTBAR
+   : '|'
+   ;
+
+
+BITAND
+   : '&'
+   ;
+
+
+POWER_OP
+   : '^'
+   ;
+
+
+BINARY
+   : 'binary'
+   ;
+
+
+SHIFT_LEFT
+   : '<<'
+   ;
+
+
+SHIFT_RIGHT
+   : '>>'
+   ;
+
+
+ESCAPE
+   : 'escape'
+   ;
+
+
+ASTERISK
+   : '*'
+   ;
+
+
+RPAREN
+   : ')'
+   ;
+
+
+LPAREN
+   : '('
+   ;
+
+
+RBRACK
+   : ']'
+   ;
+
+
+LBRACK
+   : '['
+   ;
+
+
+COLON
+   : ':'
+   ;
+
+
+ALL_FIELDS
+   : '.*'
+   ;
+
+
+EQ
+   : '='
+   ;
+
+
+LTH
+   : '<'
+   ;
+
+
+GTH
+   : '>'
+   ;
+
+
+NOT_EQ
+   : '!='
+   ;
+
+
+NOT
+   : 'not'
+   ;
+
+
+LET
+   : '<='
+   ;
+
+
+GET
+   : '>='
+   ;
+
+
+SEMI
+   : ';'
+   ;
+
+
+COMMA
+   : ','
+   ;
+
+
+DOT
+   : '.'
+   ;
+
+
+COLLATE
+   : 'collate'
+   ;
+
+
+INNER
+   : 'inner'
+   ;
+
+
+OUTER
+   : 'outer'
+   ;
+
+
+JOIN
+   : 'join'
+   ;
+
+
+CROSS
+   : 'cross'
+   ;
+
+
+USING
+   : 'using'
+   ;
+
+
+INDEX
+   : 'index'
+   ;
+
+
+KEY
+   : 'key'
+   ;
+
+
+ORDER
+   : 'order'
+   ;
+
+
+GROUP
+   : 'group'
+   ;
+
+
+BY
+   : 'by'
+   ;
+
+
+FOR
+   : 'for'
+   ;
+
+
+USE
+   : 'use'
+   ;
+
+
+IGNORE
+   : 'ignore'
+   ;
+
+
+PARTITION
+   : 'partition'
+   ;
+
+
+STRAIGHT_JOIN
+   : 'straight_join'
+   ;
+
+
+NATURAL
+   : 'natural'
+   ;
+
+
+LEFT
+   : 'left'
+   ;
+
+
+RIGHT
+   : 'right'
+   ;
+
+
+OJ
+   : 'oj'
+   ;
+
+
+ON
+   : 'on'
+   ;
+
+
+ID
+   : ( 'a' .. 'z' | 'A' .. 'Z' |'0' .. '9'| '_' )+
+   ;
+
+
+INT
+   : '0' .. '9'+
+   ;
+
+
+NEWLINE
+   : '\r'? '\n' -> skip
+   ;
+
+
+WS
+   : ( ' ' | '\t' | '\n' | '\r' )+ -> skip
+   ;
+
+
+USER_VAR
+   : '@' ( USER_VAR_SUBFIX1 | USER_VAR_SUBFIX2 | USER_VAR_SUBFIX3 | USER_VAR_SUBFIX4 )
+   ;
+
+
+fragment USER_VAR_SUBFIX1
+   : ( '`' ( ~ '`' )+ '`' )
+   ;
+
+
+fragment USER_VAR_SUBFIX2
+   : ( '\'' ( ~ '\'' )+ '\'' )
+   ;
+
+
+fragment USER_VAR_SUBFIX3
+   : ( '\"' ( ~ '\"' )+ '\"' )
+   ;
+
+
+fragment USER_VAR_SUBFIX4
+   : ( 'A' .. 'Z' | 'a' .. 'z' | '_' | '$' | '0' .. '9' | DOT )+
+   ;
+
+   
+   
+// §3.10.1 Integer Literals
+
+IntegerLiteral
+    :   DecimalIntegerLiteral
+    ;
+
+fragment
+DecimalIntegerLiteral
+    :   DecimalNumeral IntegerTypeSuffix?
+    ;
+
+
+
+fragment
+IntegerTypeSuffix
+    :   [lL]
+    ;
+
+fragment
+DecimalNumeral
+    :   '0'
+    |   NonZeroDigit (Digits? | Underscores Digits)
+    ;
+
+fragment
+Digits
+    :   Digit (DigitOrUnderscore* Digit)?
+    ;
+
+fragment
+Digit
+    :   '0'
+    |   NonZeroDigit
+    ;
+
+fragment
+NonZeroDigit
+    :   [1-9]
+    ;
+
+fragment
+DigitOrUnderscore
+    :   Digit
+    |   '_'
+    ;
+
+fragment
+Underscores
+    :   '_'+
+    ;
+
+
+
+// §3.10.2 Floating-Point Literals
+
+FloatingPointLiteral
+    :   DecimalFloatingPointLiteral
+    ;
+
+fragment
+DecimalFloatingPointLiteral
+    :   Digits '.' Digits? FloatTypeSuffix?
+    |   '.' Digits FloatTypeSuffix?
+    |   Digits FloatTypeSuffix?
+    |   Digits FloatTypeSuffix
+    ;
+
+
+fragment
+SignedInteger
+    :   Sign? Digits
+    ;
+
+fragment
+Sign
+    :   [+-]
+    ;
+
+fragment
+FloatTypeSuffix
+    :   [fFdD]
+    ;
+
+
+// §3.10.3 Boolean Literals
+
+BooleanLiteral
+    :   'true'
+    |   'false'
+    ;
+
+// §3.10.4 Character Literals
+
+CharacterLiteral
+    :   '\'' SingleCharacter '\''
+    ;
+
+fragment
+SingleCharacter
+    :   ~['\\]
+    ;
+    
+    
+// §3.10.5 String Literals
+StringLiteral
+    :   '"' StringCharacters? '"'
+    |   '\'' StringCharacters? '\''
+    ;
+fragment
+StringCharacters
+    :   StringCharacter+
+    ;
+
+
+fragment
+StringCharacter
+    :   ~["\\]
+    |   EscapeSequence
+    ;
+
+fragment
+EscapeSequence
+    :   '\\' [btnfr"'\\]
+    |   OctalEscape
+    |   UnicodeEscape
+    ;
+    
+    
+fragment
+OctalEscape
+    :   '\\' OctalDigit
+    |   '\\' OctalDigit OctalDigit
+    |   '\\' ZeroToThree OctalDigit OctalDigit
+    ;
+
+fragment
+UnicodeEscape
+    :   '\\' 'u' HexDigit HexDigit HexDigit HexDigit
+    ;
+
+fragment
+ZeroToThree
+    :   [0-3]
+    ;
+    
+// §3.8 Identifiers (must appear after all keywords in the grammar)
+
+Identifier
+    :   JavaLetter JavaLetterOrDigit*
+    ;
+
+
+fragment
+HexDigit
+    :   [0-9a-fA-F]
+    ;
+
+fragment
+OctalDigit
+    :   [0-7]
+    ;   
+    
+fragment
+JavaLetter
+    :   [a-zA-Z$_] // these are the "java letters" below 0xFF
+    ;
+
+fragment
+JavaLetterOrDigit
+    :   [a-zA-Z0-9$_] // these are the "java letters or digits" below 0xFF
+    ;
+
+//
+// Additional symbols not defined in the lexical specification
+//
+
+AT : '@';
+ELLIPSIS : '...';
+
+//
+// Whitespace and comments
+//
+
+WS  :  [ \t\r\n\u000C]+ -> skip
+    ;
+
+COMMENT
+    :   '/*' .*? '*/' -> skip
+    ;
+
+LINE_COMMENT
+    :   '//' ~[\r\n]* -> skip
+    ;
+
+   

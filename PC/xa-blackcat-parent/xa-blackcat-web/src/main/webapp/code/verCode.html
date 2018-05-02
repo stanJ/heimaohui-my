@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+<!-- bootstrap 3.0.2 -->
+<link href="../css/bootstrap-3.2.0/css/bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="../css/bootstrap-box.css" rel="stylesheet" type="text/css" />
+<link href="../css/bootstrap-page.css" rel="stylesheet" type="text/css" />
+<link href="../css/myStyle.css" rel="stylesheet" type="text/css" />
+<link href="../js/validator/jquery.validator.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/jsviews.js"></script>
+<script type="text/javascript" src="../js/loadTmpl.js"></script>
+<script type="text/javascript" src="../js/base.js"></script>
+<script	type="text/javascript" src="../js/validator/jquery.validator.js"></script>
+<script type="text/javascript" src="../js/validator/local/zh_CN.js"></script>
+<script type="text/javascript" charset="utf-8" src="../ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="../ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="../ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="../js/ajaxfileupload.js"></script>
+<script type="text/javascript">
+var imgUrl = "";
+$(function(){
+	$.ajax({
+		url: "../admin/vercode/get",
+		dataType:'json',
+		success:function(data){
+			if(data.success && data.objList) {
+				$("#myImageShow").attr("src", ".." + data.objList.codeImgUrl);
+			}
+		}
+	});
+	$("#saveOrupdate").click(function() {
+		$.ajax({
+			url: "../admin/vercode/save",
+			type:"POST",
+			data:{
+				filePath: imgUrl
+			},
+			dataType:'json',
+			success:function(data){
+				if(data.success) {
+					alert("保存成功");
+				}
+			}
+		});
+	});
+	
+	$(document).on('change','#uploadPhotoFile',function(){
+		$.ajaxFileUpload({
+			url:'../admin/information/photoUpload',
+			secureuri:false,
+			fileElementId:'uploadPhotoFile',
+			type:'POST',
+			dataType: 'json',			
+			success: function (data, status){
+				if(data){
+					var ds = data.split(":");
+					if(ds[0] == 1){
+						$("#photoPath").val(ds[1]);
+						imgUrl = ds[1];
+						$("#myImageShow").attr('src',".." + imgUrl);
+						$("#myImageShow").attr('width','200px');
+						$("#myImageShow").attr('height','200px');
+						height = ds[2];
+						width = ds[3];
+						$("#imagePx").html("宽:"+ds[3]+"px,高:"+ds[2]+"px");
+						if(height != v_height || width != v_width){
+							//alert("为保证终端显示效果,该图片像素建议为200px*200px,请重新上传!");
+						}
+					}
+				}
+			}
+		});
+	});
+});
+ </script>
+</head>
+<body>
+	<section>
+		<div class="row">
+			<div class="col-xs-1">
+			</div>
+			<div class="col-xs-8">
+				<div style="margin-top:20px;">
+					<input type="button" value="确定" id="saveOrupdate" class="btn btn-success">
+				</div>
+			</div>
+		</div>
+		<div class="row" style="margin-top: 20px;">
+			<div class="col-xs-1">
+			</div>
+			<div class="col-xs-8">
+				<div>
+					二维码图片
+					<div>
+						<img id="myImageShow" src="" style="border:1px solid #CCC; width:200px; height:200px;"/>
+					</div>
+					<div style="font-size: 14px;color:red">为保证终端显示效果,该图片像素建议为200px*200px</div>
+				</div>
+				<div>
+					<input type="file" id="uploadPhotoFile" name="photoFile" />
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

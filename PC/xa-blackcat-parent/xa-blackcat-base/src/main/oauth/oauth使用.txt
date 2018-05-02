@@ -1,0 +1,27 @@
+1、执行dbscheme->oauth.ddl
+2、终端请求:
+http://localhost:8080/taisiwang/oauth/token?client_id=unity-client&client_secret=unity&grant_type=password&scope=read,write&username=admin&password=admin
+
+http://localhost:8080/taisiwang/oauth/token?client_id=mobile-client&client_secret=mobile&grant_type=password&scope=read,write&username=admin&password=admin
+
+说明:client_id  		表oauth_client_details指定
+	 client_secret	表oauth_client_details指定
+	 grant_type		鉴权方式  (password,采用用户名密码的方式鉴权)
+	 scope			读写
+	 username		用户名
+	 password		密码
+ 返回{"access_token":"3420d0e0-ed77-45e1-8370-2b55af0a62e8","token_type":"bearer","refresh_token":"b36f4978-a172-4aa8-af89-60f58abe3ba1","expires_in":43199,"scope":"read write"}
+	 access_token	请求获得的访问令牌
+	 token_type		类型
+	 refresh_token	刷新令牌
+	 expires_in		有效时间(秒)
+	 scope			权限范围(与请求的scope对应)
+3、所有受限url需包含/unity/或者/mobile/
+4、通过2获取到的token进行访问受限资源:
+	http://localhost:8080/taisiwang/mobile/mobileTestController/toTest?access_token=3420d0e0-ed77-45e1-8370-2b55af0a62e8
+在有效时间expires_in内访问均可,token不受服务器重启影响,需要通过token获取user信息请通过表oauth_access_token获取user_name
+5、刷新令牌的使用,刷新令牌需要在access_token失效后使用,使用方式如下,(不需要再次使用用户名和密码进行鉴权):
+	http://localhost:8080/taisiwang/oauth/token?client_id=mobile-client&client_secret=mobile&grant_type=refresh_token&refresh_token=bb710379-f503-44dd-a55d-d415c50dc890
+	
+	
+	

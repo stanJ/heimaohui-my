@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html manifest="../backstage/main.appcache">
+    <head>
+        <meta charset="UTF-8">
+        <title>修改用户信息</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!-- bootstrap 3.0.2 -->
+        <link href="../css/bootstrap-3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="../css/bootstrap-box.css" rel="stylesheet" type="text/css" />
+        <link href="../css/bootstrap-page.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="../js/resizableColumns/jquery.resizableColumns.css">
+        <link href="../css/myStyle.css" rel="stylesheet" type="text/css" />
+        <link href="../js/validator/jquery.validator.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="../css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/global.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/body.css"/>
+        <script type="text/javascript" src="../js/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../js/resizableColumns/jquery.resizableColumns.js"></script>
+        <script type="text/javascript" src="../js/jsviews.min.js"></script>
+        <script type="text/javascript" src="../js/loadTmpl.js"></script>
+        <script	type="text/javascript" src="../js/validator/jquery.validator.js"></script>
+		<script type="text/javascript" src="../js/validator/local/zh_CN.js"></script>
+		<script type="text/javascript" src="../js/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../js/tableGrid/jquery.tableGrid.js"></script>
+        <script type="text/javascript">
+        	$.views.converters("ischecked",function(first,last){
+        		var flag=false;
+    			if(first ==last){
+    				flag=true;
+    			} 
+    			return flag? "selected":"";
+    		});
+			var userId=getUrlParam("userId");
+			$(function(){
+				if(userId==""){
+					alert("userId参数不能为空");
+					return;
+				}
+				$("#userId").val(userId);
+				var url ='../xaCmsUser/'+userId;
+				$.ajax({
+					url:url,
+					type:'get',
+					dataType:'json',
+					success:function(data){
+						var userContentHtml=$("#userTmpl").render(data,{mydata: data});
+						$("#usercontent").html(userContentHtml);
+						$('input[type="text"]').addClass('inp_select');
+						$('input[type="password"]').addClass('inp_select');
+						$('select').addClass('inp_select');
+					}
+				});
+				$("#demo_31").validator({
+					valid : function(form) {
+						/* var selectArray =new Array();	//下拉选中项
+						$("input[name='roleCkBox']:checked").each(function () {
+							selectArray.push($(this).val());
+		                }); */
+						var userName=$("#userName").val();
+						var password=$("#password").val();
+						var nickname=$("#nickname").val();
+						/* if(userType == 1){
+							if(!confirm("你确定赋予该用户超级管理员权限吗？")){
+								return;
+							}
+						} */
+						//var selectRole=""+selectArray+"";
+						var roleId=$('#roleId').val();
+						var xaCmsUser="";
+						var url="";
+						var ajaxType="";
+						if(typeof(userId)=="undefined" || userId == 0){
+							//新增
+							xaCmsUser={"userName":userName,"password":password,"nickName":nickname,"userType":1,"roleId":roleId};
+							url="../xaCmsUser/addUser/"+roleId;
+							ajaxType="POST";
+						}else{
+							//修改
+							xaCmsUser={"userId":userId,"userName":userName,"password":password,"nickName":nickname,"userType":1,"roleId":roleId};
+							url="../xaCmsUser/update/"+roleId;
+							ajaxType="POST";
+						}
+						$.ajax({
+							url:url,
+							type:ajaxType,
+							datType:'json',
+							contentType: "application/json",
+							data:JSON.stringify(xaCmsUser),
+							success:function(data){
+								if(data.code==1){
+									alert("保存成功");
+								}
+								else{
+									alert(data.message);
+								}
+							}
+						});
+					}
+				}).on("click", "#saveOrupdate", function(e) {
+					$(e.delegateTarget).trigger("validate");
+				});
+			});
+        </script>
+    </head>
+    <body>
+      <section>
+          <div class="col-xs-12">
+        	<div class="span1">
+				<span class="badge badge-info">用户管理    &gt; 用户编辑</span>
+			</div>
+              <div class="box" style="height:800px">
+                     <form id="demo_31" >
+                      <div class="box-header">
+                      <br>
+                          <input type="button" value="确认提交" id="saveOrupdate" class="btn btn-success">
+                          <input type="button" value="取消返回" onclick="location.href='adminList.html'" class="btn btn-success">
+                      </div>
+                      <div class="tab" style="margin:20px;" id="usercontent"></div>
+                  	</form>
+              </div>
+          </div>
+      </section>
+      <script type="text/x-jsrender" id="userTmpl">
+		{{if user}}
+			<input type="hidden" id="userId" value="{{:user.userId}}" />
+	        <li style="width:100px;text-align:left"><label>用户名:</label></li><li style="width:750px;text-align:left"><input type="text" style="width:400px;" placeholder="用户名" id="userName" readonly="readonly" value="{{:user.userName}}" /></li>
+	        <li style="width:100px;text-align:left"><label>密码:</label></li><li style="width:750px;text-align:left"><input type="password" style="width:400px;" placeholder="密码(不填则不修改)" data-rule="密码:password;" name="mypass" id="password" /></li>
+	        <li style="width:100px;text-align:left"><label>确认密码:</label></li><li style="width:750px;text-align:left"><input type="password" style="width:400px;" placeholder="确认密码(不填则不修改)" data-rule="确认密码:match(mypass);" id="password1" /></li>
+	        <li style="width:100px;text-align:left"><label>昵称:</label></li><li style="width:750px;text-align:left"><input type="text" style="width:400px;" placeholder="昵称" data-rule="昵称:required;" id="nickname" value="{{:user.nickname}}" /></li>
+	        <li style="width:100px;text-align:left"><label>角色:</label></li><li style="width:750px;text-align:left">
+			<select style="width:400px;" id="roleId" data-rule="角色:required;">
+				<option value="">请选择...</option>
+				{{for role}}
+					<option value="{{:roleId}}" {{ischecked:roleId #parent.parent.data.user.roleId}} >{{:roleName}}</option>
+				{{/for}}
+			</select></li>
+		{{else}}
+	        <li style="width:100px;text-align:left"><label>用户名:</label></li><li style="width:750px;text-align:left"><input type="text" style="width:400px;" placeholder="用户名" name="userName" data-rule="用户名:required;userName;length[5~30];remote[get:../xaCmsUser/checkUserName]" id="userName" /></li>
+	        <li style="width:100px;text-align:left"><label>密码:</label></li><li style="width:750px;text-align:left"><input type="password" style="width:400px;" placeholder="密码" data-rule="密码:required;password;" name="mypass" id="password" /></li>
+	        <li style="width:100px;text-align:left"><label>确认密码:</label></li><li style="width:750px;text-align:left"><input type="password" style="width:400px;" placeholder="确认密码" data-rule="确认密码:required;match(mypass);" id="password1" /></li>
+	        <li style="width:100px;text-align:left"><label>昵称:</label></li><li style="width:750px;text-align:left"><input type="text" style="width:400px;" placeholder="昵称" data-rule="昵称:required;" id="nickname" /></li>
+	        <li style="width:100px;text-align:left"><label>角色:</label></li><li style="width:750px;text-align:left">
+			<select style="width:400px;" id="roleId" data-rule="角色:required;">
+				<option value="">请选择...</option>
+				{{for role}}
+					<option value="{{:roleId}}">{{:roleName}}</option>
+				{{/for}}
+			</select></li>
+		{{/if}}
+			
+	</script>
+    </body>
+</html>

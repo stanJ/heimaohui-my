@@ -1,0 +1,1 @@
+insert into tb_xa_userextend (id,create_time,create_user,status,version,company,name,user_id,user_type,contact,password_update_times) values ('1',now(),'1',1,1,'贝尚智库','超级管理员','1',1,'000',0);

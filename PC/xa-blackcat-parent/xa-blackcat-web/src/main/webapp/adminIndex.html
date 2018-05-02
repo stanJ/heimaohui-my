@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html manifest="main.appcache">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>mainframe</title>
+<link rel="stylesheet" href="css/bootstrap-3.2.0/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="css/global.css"/>
+		<script src="js/jquery-1.11.0.min.js"></script>
+		<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/navigate.js"></script>
+		<script src="js/jsviews.min.js"></script>
+		<script src="js/base.js" type="text/javascript"></script>
+		<script	type="text/javascript" src="js/validator/jquery.validator.js"></script>
+		<script type="text/javascript" src="js/validator/local/zh_CN.js"></script>
+		
+		<!–[if lte IE 6]>  
+		<script src="js/DD_belatedPNG_0.0.8a.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+  			DD_belatedPNG.fix('div, ul, img, li, input , a');
+		</script>
+		<![endif]–>
+		
+		<style>
+			body{
+				overflow: hidden;
+			}
+		</style>
+		<script type="text/javascript">
+		$(document).ready(function() {
+			$("#logback").attr("href", root + "j_spring_security_logout");
+			$.ajax({
+				url : root + 'xaCmsUser/showMenu',
+				type : 'get',
+				dataType : 'json',
+				success : function(data) {
+					var menuHtml = $("#nav_menu").render(data.currentMenuData);
+					if(data.currentUser.nickName.length > 0){
+						if(data.currentUser.nickName.length > 6){
+							$("#userName").html(data.currentUser.nickName.substring(0,5)+'...');
+						}
+						else{
+							$("#userName").html(data.currentUser.nickName);
+						}
+					}
+					else{
+						$("#userName").html(data.currentUser.userName);
+					}
+					$("#myUserId").val(data.currentUser.userId);
+					$("#leftNav").append(menuHtml).leftNavMenu({
+						single : true
+					});
+					/* $('.sidebar_dl dd a').on('click', function() {
+						$('.sidebar_dl dd a').removeClass('selected');
+						$('.sidebar_dl dd').removeClass('selected_dd');
+						$(this).addClass('selected_dd');
+						$(this).addClass('selected');
+					}); */
+					$('.sidebar_dl dd').on('click', function() {
+						/* $('.sidebar_dl dd a').removeClass('selected'); */
+						$('.sidebar_dl dd').removeClass('selected_dd');
+						sessionStorage.clear();
+						$(this).addClass('selected_dd');
+						$(this).addClass('selected');
+					});
+					
+					initLeftMenu();
+				}
+			});
+			
+			$("#updatePassword").click(function(){
+				$('#validateForm')[0].reset();
+				$("#myModal").modal();
+			});
+
+			$("#validateForm").validator({
+				valid : function(form) {
+					var userId=$("#myUserId").val();
+				    var newPassword=$("#newPassword").val();
+				    var oldPassword=$("#oldPassword").val();
+				    $.ajax({
+				    	url:"xaCmsUser/update/"+userId+"/"+newPassword+"/"+oldPassword,
+				    	type:'POST',
+				    	dataType:'json',
+				    	success:function(data){
+				    		console.log(data);
+				    		if(data.status==1){
+				    			alert("密码修改成功");
+				    			$('#myModal').modal('hide');
+				    		}else{
+				    			alert(data.result);
+				    		}
+				    	}
+				    });
+				}
+			}).on("click", "#myupdate", function(e) {
+				$(e.delegateTarget).trigger("validate");
+			});
+			
+		});
+		
+		function infoSelf(){
+			var selfUrl = "admin/userEditSelf.html?userId="+$("#myUserId").val();
+			clickIfm(selfUrl);
+		}
+		
+		function clickIfm(href) {
+			$("#ti_panel_frame").css("height", $(window).height() - 63).attr("src", href);
+			closePanel();
+		}
+		
+		function logout(){
+			window.location.href = "j_spring_security_logout";
+		}
+		</script>
+</head>
+<body>
+		<div class="header">
+			<div class="logo fl"><img src="img/login_logo.png" alt="" /></div>
+			<div class="inf fr">
+				<span><em class="user_ico_inf"></em></span><div id="userName">用户名</div><i class="triangle_top"></i>
+				<input type="hidden" id="myUserId" name="myUserId" />
+				<div class="msg">
+					<i class="triangle_bottom"></i>
+					<ul class="item">
+						<li><a href="#" onclick="infoSelf();" style="cursor:pointer">我的账号</a></li>
+						<li><a href="#" id="updatePassword" style="cursor:pointer">修改密码</a></li>
+						<li><a href="#" onclick="logout();" style="cursor:pointer">退出系统</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="sidebar">
+			<div class="sidebar_item fl">
+			<div id="leftNav" class="ti-nav-menu"></div>
+		</div>
+		<div class="l-hide fl"></div>
+	</div>
+	<div class="main" style="margin:0px 5px 0 220px;_margin:0 0 0 20px;_float:left;">
+		<iframe width="100%" height="100%" id="ti_panel_frame" frameborder="0"  scrolling="yes" src=""></iframe>
+	</div>
+	<script type="text/javascript">adjustIfrHt();</script>
+<section>
+<!--菜单模板===begin===-->
+<script id="nav_menu" type="text/x-jsrender">
+	{{for items}}
+		<dl class="sidebar_dl">
+			<dt><span><i class="{{:icon}}"></i>{{:text}}</span><i class="triangle_top2"></i></dt>
+			{{if list}}
+				{{for list}}
+					<dd onclick="clickIfm('{{:href}}')"><span>{{:text}}</span></dd>
+				{{/for}}
+			{{/if}}
+		</dl>
+	{{/for}}
+</script>
+<!--菜单模板====end====-->
+</section>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <form id="validateForm">
+	<div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               修改密码
+            </h4>
+         </div>
+         <div class="modal-body">
+            <fieldset> 
+				<div class="control-group">
+					<label for="userPhoto2" class="control-label">旧密码：</label>
+					<div class="controls">
+						<input type="password" placeholder="请填写旧密码" data-rule="旧密码:required;password;" id="oldPassword" name="oldPassword" />
+					</div>
+				</div>
+				<!-- Select Basic -->
+				<div class="control-group">
+					<label for="userType" class="control-label">新密码：</label>
+					<div class="controls" >
+						<input type="password" placeholder="请填写新密码" data-rule="新密码:required;password;" id="newPassword" name="newPassword" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label for="userPassword" class="control-label">确认新密码</label>
+					<div class="controls">
+						<input type="password" required="required" id="newpassword1" data-rule="确认密码:required;password;match(newPassword);"  placeholder="请再次输入新密码" name="newpassword1" />
+					</div>
+				</div>
+			</fieldset>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+            </button>
+            <button type="button" id="myupdate" class="btn btn-primary">确定</button>
+         </div>
+      </div>
+</form>
+</div>
+</body>
+</html>
+

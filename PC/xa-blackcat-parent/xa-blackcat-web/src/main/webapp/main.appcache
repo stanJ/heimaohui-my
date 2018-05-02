@@ -1,0 +1,22 @@
+CACHE MANIFEST
+CACHE:
+css/bootstrap-3.2.0/css/bootstrap.min.css
+css/bootstrap-box.css
+css/bootstrap-page.css
+css/myStyle.css
+js/datapacker/css/bootstrap-datetimepicker.min.css
+js/resizableColumns/jquery.resizableColumns.css
+css/reset.css
+css/global.css
+css/body.css
+js/jquery-1.11.0.min.js
+js/bootstrap.min.js
+js/resizableColumns/jquery.resizableColumns.js
+js/jsviews.min.js
+jsViewsTmpls/page.tmpl.html
+js/loadTmpl.js 
+js/base.js
+js/tableGrid/jquery.tableGrid.js
+
+NETWORK:
+*

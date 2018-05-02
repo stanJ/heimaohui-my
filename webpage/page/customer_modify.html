@@ -1,0 +1,350 @@
+a<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>客户添加修改</title>
+	</head>
+	<body>
+		<script src="../js/lib/seajs/sea.js" type="text/javascript" charset="utf-8" id="seajsnode"></script>
+		<div id="content-wrapper">
+			<div class="bszk-breadcrumb-wrapper">
+				<i class="bszk-icon-home"></i>
+				<ul class="sui-breadcrumb">
+				  <li><a href="#" data-href="index">首页</a></li>
+				  <li><a href="#" data-href="customer_manage">客户管理</a></li>
+				  <li class="active"></li>
+				</ul>
+			</div>
+			<div class="bszk-title"></div>
+			<div class="sui-form form-horizontal">
+				<div class="bszk-block clearfix">
+					<div class="bszk-title-sm">基本信息</div>
+					<form class="form-customer-info">
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label">
+							  客户名称
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="name" maxlength="20">
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  公司负责人
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="manager">
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  联系方式
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="contact">
+							</div>
+						</li>
+					</ul>
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label">
+							  邮箱
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="email" maxlength="40">
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  微信
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="wechat">
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  所在地区
+							</label>
+							<div class="controls">
+								<span class="sui-dropdown dropdown-bordered select">
+										<span class="dropdown-inner">
+											<a id="drop4" role="button" data-toggle="dropdown" href="#" class="dropdown-toggle">
+												<input value="" name="province" type="hidden" class="">
+												<i class="caret"></i><span>请选择</span>
+											</a>
+											<ul id="menu4" role="menu" aria-labelledby="drop4" class="sui-dropdown-menu">
+												<li role="presentation" class="">
+													<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="">请选择</a>
+												</li>
+											</ul>
+										</span>
+								</span>
+								<span class="sui-dropdown dropdown-bordered select">
+										<span class="dropdown-inner">
+											<a id="drop4" role="button" data-toggle="dropdown" href="#" class="dropdown-toggle">
+												<input value="" name="city" type="hidden" class="">
+												<i class="caret"></i><span>请选择</span>
+											</a>
+											<ul id="menu4" role="menu" aria-labelledby="drop4" class="sui-dropdown-menu">
+												<li role="presentation" class="">
+													<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="">请选择</a>
+												</li>
+											</ul>
+										</span>
+								</span>
+							</div>
+						</li>
+					</ul>
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label">
+							  客户评价
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="comment">
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  服务地区
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="serviceArea">
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  服务对象
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="serviceObject">
+							</div>
+						</li>					
+				   </ul>
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label v-top">
+							  公司简介
+							</label>
+							<div class="controls">
+								<textarea class="input-xxlarge" name="intro"></textarea>
+							</div>
+						</li>
+					</ul>
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label">
+							</label>
+							<div class="controls">
+								<button class="sui-btn btn-primary" type="submit">保存</button>
+							</div>
+						</li>	
+					</ul>
+					</form>
+					<div class="bszk-title-sm">联系人</div>
+					<div class="bszk-btn-group">
+						<button class="sui-btn btn-primary btn-sm mr_btn" id="btn_add1">添加</button>
+						<button class="sui-btn btn-danger btn-sm" id="btn_remove1">删除</button>
+					</div>
+					<div id="table1" class="table-wrapper"></div>
+					<div class="bszk-title-sm">合作记录</div>
+					<div class="bszk-btn-group">
+						<button class="sui-btn btn-primary btn-sm mr_btn" id="btn_add2">添加</button>
+						<!--<button class="sui-btn btn-danger btn-sm" id="btn_remove2">删除</button>-->
+					</div>
+					<div id="table2" class="table-wrapper"></div>
+				</div>
+			</div>
+			
+		</div>
+		<script id="template1" type="text/html">
+			<div id="myModal1" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">	
+			  <div class="modal-dialog">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h4 id="myModalLabel" class="modal-title">Modal title111</h4>
+				  </div>
+				  <form class="sui-form scrollwidthpop form-contactor">
+				  <div class="modal-body">		
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								其他联系人
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="name" maxlength="30">
+							</div>
+							<label class="control-label"> 
+								联系方式
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="contact" maxlength="30">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								微信
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="wechat" maxlength="30">
+							</div>
+							<label class="control-label"> 
+								邮箱
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="email" maxlength="40">
+							</div>
+						</div>
+				  </div>
+				  <div class="modal-footer">
+					<button type="submit"  class="sui-btn btn-primary btn-large">确认</button>
+					<button type="button" data-dismiss="modal" class="sui-btn btn-large">取消</button>
+				  </div>
+				  </form>
+				</div>
+			  </div>
+			</div>
+		</script>
+		<script id="template2" type="text/html">
+			<div id="myModal2" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">	
+			  <div class="modal-dialog">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h4 id="myModalLabel" class="modal-title">Modal title111</h4>
+				  </div>
+				  <form class="sui-form scrollwidthpop form-work">
+				  <div class="modal-body">		
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								对接人
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="linker">
+							</div>
+							<!--<label class="control-label"> 
+								创建人
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="">
+							</div>-->
+							<label class="control-label"> 
+								资源名称
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="expertName">
+							</div>
+							<label class="control-label"> 
+								合同价
+							</label>
+							<div class="controls wan-suffix">
+								<input type="text" class="input-medium" name="contractPrice" maxlength="10">
+							</div>
+						</div>
+						<div class="roleAddcontent">
+							<label class="control-label"> 
+								活动时间
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium input-date" data-toggle="datepicker" name="actionDate">
+							</div>
+							<label class="control-label"> 
+								活动地点
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="actionAddress">
+							</div>
+							<label class="control-label"> 
+								评价
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="comment">
+							</div>
+						</div>
+						<div class="bszk-onerow clearfix">
+							<div class="bszk-title-sm">现场照片</div>
+							<div class="bszk-btn-group">
+								<button class="sui-btn btn-primary btn-sm mr_btn" id="btn_add_tp2_1" type="button">添加</button>
+								<button class="sui-btn btn-danger btn-sm" id="btn_remove_tp2_1" type="button">删除</button>
+							</div>
+						</div>
+						<ul class="upload-img-ul ul-modal-work">
+							<li class="upload-img-li">
+								<label class="checkbox-pretty inline"><input type="checkbox"><span></span></label>
+								<span class="serial-number">1</span>
+								<div class="preview-img" ></div>
+								<input type="text" class="input-large file-name" readonly/>
+								<input type="hidden" name="pics" class="file-path"/>
+								<div class="file_wrapper">
+									<button class="sui-btn btn-file" type="button">选择文件</button>
+									<input type="file" class="input-file" accept="image/bmp,image/jpg,image/jpeg,image/tiff,">
+								</div>
+								<button class="sui-btn btn-success" type="button">下载原图</button>
+							</li>
+						</ul>
+				  </div>
+				  <div class="modal-footer">
+					<button type="submit"  class="sui-btn btn-primary btn-large">确认</button>
+					<button type="button" data-dismiss="modal" class="sui-btn btn-large">取消</button>
+				  </div>
+				  </form>
+				</div>
+			  </div>
+			</div>
+		</script>
+		<script id="template3" type="text/html">
+			<div id="myModal3" tabindex="-1" role="dialog" data-hasfoot="false" class="sui-modal hide fade">	
+			  <div class="modal-dialog">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h4 id="myModalLabel" class="modal-title">Modal title111</h4>
+				  </div>
+				  <div class="modal-body">
+					<div class="sui-form scrollwidthpop show-modal-work">
+						<ul class="bszk-data-ul">
+							<li class="bszk-data-li">
+								<div class="bszk-data-group"><span class="bszk-data-title">对接人:</span><span class="bszk-data" data-name="linker"></span></div>
+								<div class="bszk-data-group"><span class="bszk-data-title">资源名称:</span><span class="bszk-data" data-name="expertName"></span></div>
+								<div class="bszk-data-group"><span class="bszk-data-title">合同价:</span><span class="bszk-data" data-name="contractPrice"></span><span>万</span></div>
+								
+							</li>
+							<li class="bszk-data-li">
+								<div class="bszk-data-group"><span class="bszk-data-title">活动时间:</span><span class="bszk-data" data-name="actionDate"></span></div>
+								<div class="bszk-data-group"><span class="bszk-data-title">活动地址:</span><span class="bszk-data" data-name="actionAddress"></span></div>
+							</li>
+							<li class="bszk-data-li">
+								<div class="bszk-data-group"><span class="bszk-data-title">评价:</span><span class="bszk-data" data-name="comment"></span></div>
+							</li>
+						</ul>
+						<div class="bszk-title-sm">现场照片</div>
+						<div class="photo-wrapper clearfix">
+							<!--<div class="photo-group">
+								<div class="photo-show"></div>
+								<button class="sui-btn btn-success">下载原图</button>
+							</div>
+							<div class="photo-group">
+								<div class="photo-show"></div>
+								<button class="sui-btn btn-success">下载原图</button>
+							</div>
+							<div class="photo-group">
+								<div class="photo-show"></div>
+								<button class="sui-btn btn-success">下载原图</button>
+							</div>
+							<div class="photo-group last-mr">
+								<div class="photo-show"></div>
+								<button class="sui-btn btn-success">下载原图</button>
+							</div>-->
+						</div>
+				  	</div>
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" data-ok="modal"  class="sui-btn btn-primary btn-large">确认</button>
+					<button type="button" data-dismiss="modal" class="sui-btn btn-large">取消</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+		</script>
+	
+	</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+<script src="js/jquery-1.11.0.min.js"></script>
+
+    
+</head>
+<body>
+    <form>
+    
+       用户名:
+       <input type="text" value="" id="j_username"/>
+       密码：
+        <input type="text" value="" id="j_password"/>
+         
+       <input type="button" value="验证" id="bt" />
+    </form>
+    
+    
+    <div id="tokenDiv"> </div>
+</body>
+
+<script>
+  
+		    $("#bt").click(function(){
+		       $.ajax({
+		    	   url:'j_spring_security_check',
+		    	   dataType: "json",
+		    	   type:"POST",
+		    	   data:{
+		    		   j_username:$("#j_username").val(),
+		    		   j_password:$("#j_password").val()
+		    	   },
+		    	   beforeSend: function (xhr) {
+		    	        xhr.setRequestHeader("X-Ajax-call", "true");
+		    	    },
+		    	   success:function(data){
+		    		   //alert(JSON.stringify(data));
+		    		   
+		    		   $("#tokenDiv").html(data.token);
+		    	   },
+		    	   fail:function(data){
+		    		   alert("fail");
+		    	   },
+		    	   error:function (data, status, e){
+						alert(JSON.stringify(data));
+						alert(JSON.stringify(status));
+						alert(JSON.stringify(e));
+					}
+		       }); 
+		       
+		       
+		    	
+		    });
+    
+ 
+	       
+    </script>
+</html>

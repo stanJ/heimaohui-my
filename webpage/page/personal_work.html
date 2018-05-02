@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>个人办公</title>
+	</head>
+	<body>
+		<script src="../js/lib/seajs/sea.js" type="text/javascript" charset="utf-8" id="seajsnode"></script>
+		<div id="content-wrapper">
+			<div class="bszk-breadcrumb-wrapper">
+				<i class="bszk-icon-home"></i>
+				<ul class="sui-breadcrumb">
+				  <li><a href="#" data-href="index">首页</a></li>
+				  <li class="active">个人办公</li>
+				</ul>
+			</div>
+			<div class="bszk-title">个人办公</div>
+			<div class="sui-form form-horizontal">
+				<div class="bszk-block clearfix">
+					<form class="form-user pw-ul">
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label">
+							  账号
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="userName" readonly>
+							</div>
+						</li>
+					</ul>
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label">
+							  原密码
+							</label>
+							<div class="controls">
+								<input type="password" class="input-medium" name="password">
+							</div>
+						</li>
+					</ul>
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label">
+							  修改密码
+							</label>
+							<div class="controls">
+								<input type="password" class="input-medium" name="newPassword">
+							</div>
+						</li>
+					</ul>
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label">
+							  重复密码
+							</label>
+							<div class="controls">
+								<input type="password" class="input-medium" name="repeatPassword">
+							</div>
+						</li>
+					</ul>
+					<ul class="query-group clearfix">
+						<li>
+							<label class="control-label">
+							  所属公司
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="company" readonly>
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  联系电话
+							</label>
+							<div class="controls">
+								<input type="text" class="input-medium" name="contact" readonly>
+							</div>
+						</li>
+						<li>
+							<label class="control-label">
+							  用户类型
+							</label>
+							<div class="controls">
+								<!--<span class="sui-dropdown dropdown-bordered select disabled">
+										<span class="dropdown-inner">
+											<a id="drop4" role="button" data-toggle="dropdown" href="#" class="dropdown-toggle">
+												<input value="" name="userType" type="hidden" class="">
+												<i class="caret"></i><span>请选择</span>
+											</a>
+											<ul id="menu4" role="menu" aria-labelledby="drop4" class="sui-dropdown-menu">
+												<li role="presentation" class="">
+													<a role="menuitem" tabindex="-1" href="javascript:void(0);" value="">请选择</a>
+												</li>
+											</ul>
+										</span>
+								</span>-->
+								<input type="hidden" name="userType" />
+								<input type="text" class="input-medium" name="userTypeText" readonly>
+							</div>
+						</li>
+				  </ul>
+				    <button type="submit" class="sui-btn btn-primary mr40 pw-btn">确认</button>
+				    <!--<button type="button" class="sui-btn pw-btn">取消</button>-->
+				  </form>
+				</div>
+			</div>
+			
+		</div>
+	</body>
+</html>

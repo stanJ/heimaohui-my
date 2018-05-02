@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>mainframe</title>
+		<link rel="stylesheet" type="text/css" href="css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="css/global.css"/>
+		
+		<!–[if lte IE 6]>  
+		<script src="js/DD_belatedPNG_0.0.8a.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+  			DD_belatedPNG.fix('div, ul, img, li, input , a');
+		</script>
+		<![endif]–>
+		
+		<style type="text/css">
+			body{
+				background: url(img/login_bj.jpg) repeat scroll top left;
+				font-family: "微软雅黑";font-size: 14px;color: #a7a7a7;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="wrap_login">
+			<div class="hd"></div>
+			<form class="bd" action="j_spring_security_check" method="post" id="loginForm" onsubmit="return submitLogin();">
+				<input type="hidden" name="SPRING_REQUEST_KEY" value="0"><!-- 指定字段名并将该值设置为0,为类型一登录 -->
+				<label>请输入帐户信息</label>
+				<span class="bd_user_ico"><i class="user_ico"></i></span>
+				<input type="text" id="adminName" name="j_username" value="" placeholder="用户名"/>
+				<span class="bd_pw_ico"><i class="password_ico"></i></span>
+				<input type="password" id="adminPassword" name="j_password" placeholder="密码"/>
+				<p id="errorMessage" style="color: red;"></p>
+				<button class="base_btn">提交</button>
+			</form>
+		</div>
+	</body>
+	<script type="text/javascript">
+		//获取浏览器参数
+		function getUrlParam(name){
+			var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+			var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+			if (r!=null){
+				return unescape(r[2]); //返回参数值
+			}
+			else{
+				return null; 
+			}
+		}
+		function submitLogin(){
+			if($("#adminName").val().length == 0){
+				alert("请输入用户名");
+				return false;
+			}
+			if($("#adminPassword").val().length == 0){
+				alert("请输入密码");
+				return false;
+			}
+			return true;
+		}
+		$(function() {
+			if(window.parent!=window){
+				window.parent.location.reload();
+			}
+			var error=getUrlParam("error");
+			if(typeof(error)!="undefined" && error!=null){
+				//$("#errorMessage").html("用户名密码错误或已经被锁定");
+				alert("用户名密码错误");
+			}
+		});
+	</script>
+</html>
